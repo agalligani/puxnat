@@ -34,7 +34,7 @@ export default class CreateGrid extends React.Component {
       Alert.alert("Error", error.message, [{ text: "OK" }]);
     }
     this.setState({ allGrids: newGridsList });
-    console.log(this.state.allGrids);
+    // console.log(this.state.allGrids);
   };
 
   _handleCreateGridPress = _ => {
@@ -55,7 +55,7 @@ export default class CreateGrid extends React.Component {
       let newGrid = this.props.navigation.state.params.clickedGrid.grid;
       this.setState({ currentGrid: newGrid });
     } else {
-      let newGrid = this.props.navigation.state.params.currentGrid;
+      let newGrid = this.props.navigation.state.params.newGrid;
       this.setState({ currentGrid: newGrid });
     }
   };

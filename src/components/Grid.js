@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import GridSquare from "./GridSquare";
 import { Constants, Svg } from "expo";
 import _ from "lodash";
 import { StyleSheet, Dimensions, Alert } from "react-native";
@@ -28,8 +27,9 @@ class Grid extends Component {
   };
 
   render() {
-    if (this.state.puzzle) {
+    if (this.state.puzzle.grid) {
       let { grid, size } = this.state.puzzle;
+      console.log("grid", Object.keys(this.state.puzzle));
       let { cols, rows } = size;
       let { width } = Dimensions.get("window");
       // Adjust for Native Base container?

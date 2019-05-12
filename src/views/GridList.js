@@ -47,20 +47,20 @@ export default class GridList extends React.Component {
   };
 
   _handleCreateGridPress = g => {
-    let newGrid = emptyGrid(15, 15);
+    let newGrid = {};
+    newGrid = emptyGrid(15, 15);
     this.setState({ currentGrid: newGrid });
     this.props.navigation.navigate("CreateGrid", {
       addGrid: grid => {
         this.setState({ allGrids: this.state.products.concat(grid) });
       },
-      newGrid: true,
+      newGrid: newGrid,
       gridsInList: this.state.allGrids,
       currentGrid: this.state.currentGrid
     });
   };
 
   _handleEditGridPress = clickedGrid => {
-    // console.log("clickedGrid", clickedGrid);
     this.setState({ clickedGrid: clickedGrid });
     this.props.navigation.navigate("CreateGrid", {
       clickedGrid: clickedGrid,
