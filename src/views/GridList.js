@@ -27,23 +27,10 @@ export default class GridList extends React.Component {
   };
 
   state = {
-    allGrids: [],
+    grids: [],
     newGridsList: [],
     gridsInList: [],
     currentGrid: {}
-  };
-
-  addNewGrid = async name => {
-    const newGridsList = this.state.allGrids.concat({
-      name: name,
-      id: Math.floor(Math.random() * 100000)
-    });
-    try {
-      await AsyncStorage.setItem("allGrids", JSON.stringify(newGridsList));
-    } catch (error) {
-      Alert.alert("Error", error.message, [{ text: "OK" }]);
-    }
-    this.setState({ allGrids: newGridsList });
   };
 
   _handleCreateGridPress = g => {
@@ -52,10 +39,10 @@ export default class GridList extends React.Component {
     this.setState({ currentGrid: newGrid });
     this.props.navigation.navigate("CreateGrid", {
       addGrid: grid => {
-        this.setState({ allGrids: this.state.products.concat(grid) });
+        this.setState({ grids: this.state.grids.concat(grid) });
       },
       newGrid: newGrid,
-      gridsInList: this.state.allGrids,
+      gridsInList: this.state.grids,
       currentGrid: this.state.currentGrid
     });
   };
@@ -74,7 +61,23 @@ export default class GridList extends React.Component {
       const savedGrids = await AsyncStorage.getItem("allGrids");
       if (savedGrids !== null) {
         this.setState({
-          allGrids: JSON.parse(savedGrids)
+          grids: JSON.parse(savedGrids)
+        });
+      } else {
+        console.log("no data");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  componentDidMount = async () => {
+    console.log("component did mount");
+    try {
+      const savedGrids = await AsyncStorage.getItem("allGrids");
+      if (savedGrids !== null) {
+        this.setState({
+          grids: JSON.parse(savedGrids)
         });
       } else {
         console.log("no data");
@@ -89,7 +92,7 @@ export default class GridList extends React.Component {
       <Container>
         <Content>
           <List>
-            {this.state.allGrids.map(grid => {
+            {this.state.grids.map(grid => {
               if (grid.grid) {
                 return (
                   <ListItem

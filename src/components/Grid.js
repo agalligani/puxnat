@@ -29,7 +29,6 @@ class Grid extends Component {
   render() {
     if (this.state.puzzle.grid) {
       let { grid, size } = this.state.puzzle;
-      console.log("grid", Object.keys(this.state.puzzle));
       let { cols, rows } = size;
       let { width } = Dimensions.get("window");
       // Adjust for Native Base container?

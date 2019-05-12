@@ -28,13 +28,14 @@ export default class CreateGrid extends React.Component {
       id: Math.floor(Math.random() * 100000),
       grid: this.state.currentGrid
     });
+    console.log(Object.keys(newGridsList));
     try {
       await AsyncStorage.setItem("allGrids", JSON.stringify(newGridsList));
     } catch (error) {
       Alert.alert("Error", error.message, [{ text: "OK" }]);
     }
     this.setState({ allGrids: newGridsList });
-    // console.log(this.state.allGrids);
+    this.props.navigation.state.params.addGrid(newGridsList.slice(-1)[0]);
   };
 
   _handleCreateGridPress = _ => {
@@ -50,13 +51,25 @@ export default class CreateGrid extends React.Component {
 
   componentDidMount = () => {};
 
-  componentWillMount = _ => {
+  componentWillMount = async _ => {
     if (this.props.navigation.state.params.clickedGrid) {
       let newGrid = this.props.navigation.state.params.clickedGrid.grid;
       this.setState({ currentGrid: newGrid });
     } else {
       let newGrid = this.props.navigation.state.params.newGrid;
       this.setState({ currentGrid: newGrid });
+    }
+    try {
+      const allGrids = await AsyncStorage.getItem("allGrids");
+      if (allGrids !== null) {
+        // We have data!!
+        this.setState({
+          allGrids: JSON.parse(allGrids)
+        });
+      }
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message);
     }
   };
 
