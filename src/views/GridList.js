@@ -1,10 +1,14 @@
 import React from "react";
-import { AsyncStorage, StyleSheet, Alert } from "react-native";
+import { AsyncStorage, StyleSheet, Alert, ScrollView } from "react-native";
 import {
+  Header,
+  Left,
+  Button,
   Body,
   Container,
   Content,
   Right,
+  Title,
   Text,
   List,
   ListItem,
@@ -56,23 +60,18 @@ export default class GridList extends React.Component {
     });
   };
 
-  componentWillMount = async () => {
+  _removeGrid = async g => {
     try {
-      const savedGrids = await AsyncStorage.getItem("allGrids");
-      if (savedGrids !== null) {
-        this.setState({
-          grids: JSON.parse(savedGrids)
-        });
-      } else {
-        console.log("no data");
-      }
+      await this.setState({
+        grids: this.state.grids.filter(grid => g.id !== grid.id)
+      });
+      await AsyncStorage.setItem("allGrids", JSON.stringify(this.state.grids));
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  componentDidMount = async () => {
-    console.log("component did mount");
+  componentWillMount = async () => {
     try {
       const savedGrids = await AsyncStorage.getItem("allGrids");
       if (savedGrids !== null) {
@@ -90,7 +89,12 @@ export default class GridList extends React.Component {
   render() {
     return (
       <Container>
-        <Content>
+        <Content
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: "space-between"
+          }}
+        >
           <List>
             {this.state.grids.map(grid => {
               if (grid.grid) {
@@ -109,6 +113,7 @@ export default class GridList extends React.Component {
                         ios="ios-remove-circle"
                         android="md-remove-circle"
                         style={{ color: "red" }}
+                        onPress={this._removeGrid.bind(this, grid)}
                       />
                     </Right>
                   </ListItem>
