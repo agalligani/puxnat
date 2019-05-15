@@ -23,33 +23,43 @@ export default class CreateGrid extends React.Component {
   };
 
   addNewGrid = async name => {
+    let currentGrid = this.state.currentGrid;
+    currentGrid.id = Math.floor(Math.random() * 100000);
+    this.setState({ currentGrid: currentGrid });
     const newGridsList = this.state.allGrids.concat({
       name: name,
-      id: Math.floor(Math.random() * 100000),
+      id: currentGrid.id,
       grid: this.state.currentGrid
     });
-    console.log(Object.keys(newGridsList));
+
     try {
       await AsyncStorage.setItem("allGrids", JSON.stringify(newGridsList));
     } catch (error) {
       Alert.alert("Error", error.message, [{ text: "OK" }]);
     }
     this.setState({ allGrids: newGridsList });
-    this.props.navigation.state.params.addGrid(newGridsList.slice(-1)[0]);
+    this.props.navigation.state.params.saveGrid(newGridsList.slice(-1)[0]);
   };
 
   _handleCreateGridPress = _ => {
-    prompt(
-      "Enter Grid Name",
-      "",
-      [{ text: "Cancel" }, { text: "OK", onPress: this.addNewGrid.bind(this) }],
-      {
-        type: "plain-text"
-      }
-    );
+    if (this.state.currentGrid.id === null) {
+      prompt(
+        "Enter Grid Name",
+        "",
+        [
+          { text: "Cancel" },
+          { text: "OK", onPress: this.addNewGrid.bind(this) }
+        ],
+        {
+          type: "plain-text"
+        }
+      );
+    } else {
+      console.log("heh", this.state.currentGrid.id);
+      this.props.navigation.state.params.saveGridById(this.state.currentGrid);
+      return;
+    }
   };
-
-  componentDidMount = () => {};
 
   componentWillMount = async _ => {
     if (this.props.navigation.state.params.clickedGrid) {
@@ -83,8 +93,6 @@ export default class CreateGrid extends React.Component {
         </Content>
         <Fab
           active={false}
-          direction="up"
-          containerStyle={{}}
           style={{ backgroundColor: "#5067ff" }}
           position="bottomRight"
           onPress={this._handleCreateGridPress.bind(this)}

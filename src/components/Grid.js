@@ -11,13 +11,14 @@ class Grid extends Component {
     height: 0,
     puzzle: {},
     showNumbers: true,
-    showLetters: false,
-    gridClickToggleAcross: true,
-    clickedGrid: null
+    showLetters: false
   };
 
   _gridSquarePress = g => {
     console.log("HERE!!!!!", g);
+    let { puzzle } = this.state;
+    puzzle.grid[g] = ".";
+    this.setState({ puzzle: puzzle });
   };
 
   componentWillMount = _ => {
@@ -34,45 +35,37 @@ class Grid extends Component {
       // Adjust for Native Base container?
       width = width - 32;
       return (
-        <Container>
-          <Content>
-            <Svg height={width} width={width}>
-              <Svg.G fill="white" stroke="green" stroke-width="5">
-                {this.props.puzzle.grid.map((sq, index) => {
-                  let squareWidth = width / cols;
-                  let height = squareWidth;
-                  let x = index % cols;
-                  let posx = x * squareWidth;
-                  let y = Math.floor(index / cols);
-                  let posy = y * height;
+        <Svg height={width} width={width}>
+          <Svg.G fill="white" stroke="green" stroke-width="5">
+            {this.props.puzzle.grid.map((sq, index) => {
+              let squareWidth = width / cols;
+              let height = squareWidth;
+              let x = index % cols;
+              let posx = x * squareWidth;
+              let y = Math.floor(index / cols);
+              let posy = y * height;
+              let fill = sq === "." ? "#111111" : "#ffffff";
 
-                  return (
-                    <Svg.Rect
-                      key={index}
-                      x={posx}
-                      y={posy}
-                      width={squareWidth}
-                      height={squareWidth}
-                      strokeWidth={1}
-                      stroke="#111111"
-                      fill="#ffffff"
-                      onPress={this._gridSquarePress.bind(this, index)}
-                    />
-                  );
-                })}
-              </Svg.G>
-            </Svg>
-          </Content>
-        </Container>
+              return (
+                <Svg.Rect
+                  key={index}
+                  x={posx}
+                  y={posy}
+                  width={squareWidth}
+                  height={squareWidth}
+                  strokeWidth={1}
+                  stroke="#111111"
+                  fill={fill}
+                  onPress={this._gridSquarePress.bind(this, index)}
+                  style={{ backgroundColor: "red", padding: 0 }}
+                />
+              );
+            })}
+          </Svg.G>
+        </Svg>
       );
     } else {
-      return (
-        <Container>
-          <Content>
-            <Spinner color="blue" />
-          </Content>
-        </Container>
-      );
+      return <Spinner color="blue" />;
     }
   }
 }

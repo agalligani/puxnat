@@ -42,7 +42,7 @@ export default class GridList extends React.Component {
     newGrid = emptyGrid(15, 15);
     this.setState({ currentGrid: newGrid });
     this.props.navigation.navigate("CreateGrid", {
-      addGrid: grid => {
+      saveGrid: grid => {
         this.setState({ grids: this.state.grids.concat(grid) });
       },
       newGrid: newGrid,
@@ -54,6 +54,21 @@ export default class GridList extends React.Component {
   _handleEditGridPress = clickedGrid => {
     this.setState({ clickedGrid: clickedGrid });
     this.props.navigation.navigate("CreateGrid", {
+      saveGridById: async grid => {
+        await this._removeGrid(grid);
+        this.setState({
+          grids: this.state.grids.concat({
+            name: grid.id,
+            id: grid.id,
+            grid: grid
+          })
+        });
+        console.log(this.state.grids);
+        await AsyncStorage.setItem(
+          "allGrids",
+          JSON.stringify(this.state.grids)
+        );
+      },
       clickedGrid: clickedGrid,
       currentGrid: this.state.clickedGrid,
       newGrid: false
@@ -97,7 +112,7 @@ export default class GridList extends React.Component {
         >
           <List>
             {this.state.grids.map(grid => {
-              if (grid.grid) {
+              if (grid !== null) {
                 return (
                   <ListItem
                     key={grid.id}
@@ -105,7 +120,8 @@ export default class GridList extends React.Component {
                   >
                     <Body>
                       <Text>
-                        {grid.grid.size.cols}x{grid.grid.size.rows}
+                        {grid.name}
+                        {/* {grid.grid.size.cols}x{grid.grid.size.rows} */}
                       </Text>
                     </Body>
                     <Right>
