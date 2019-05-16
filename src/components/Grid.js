@@ -11,14 +11,31 @@ class Grid extends Component {
     height: 0,
     puzzle: {},
     showNumbers: true,
-    showLetters: false
+    showLetters: false,
+    clickedSquare: null
   };
 
   _gridSquarePress = g => {
-    console.log("HERE!!!!!", g);
+    // console.log("HERE!!!!!", g);
     let { puzzle } = this.state;
-    puzzle.grid[g] = ".";
+    puzzle.grid[g] = puzzle.grid[g] == "." ? "" : ".";
+    this._gridRenumber();
     this.setState({ puzzle: puzzle });
+  };
+
+  _gridRenumber = _ => {
+    let num = 0;
+    let gridnums = [];
+    this.state.puzzle.grid.forEach((e, i) => {
+      if (e == ".") {
+        gridnums[i] = 0;
+      } else {
+        num += 1;
+        gridnums[i] = num;
+      }
+    });
+    this.state.puzzle.gridnums = gridnums;
+    this.setState({ puzzle: this.state.puzzle.gridnums });
   };
 
   componentWillMount = _ => {
@@ -29,7 +46,7 @@ class Grid extends Component {
 
   render() {
     if (this.state.puzzle.grid) {
-      let { grid, size } = this.state.puzzle;
+      let { grid, size, gridnums } = this.state.puzzle;
       let { cols, rows } = size;
       let { width } = Dimensions.get("window");
       // Adjust for Native Base container?
@@ -37,7 +54,7 @@ class Grid extends Component {
       return (
         <Svg height={width} width={width}>
           <Svg.G fill="white" stroke="green" stroke-width="5">
-            {this.props.puzzle.grid.map((sq, index) => {
+            {grid.map((sq, index) => {
               let squareWidth = width / cols;
               let height = squareWidth;
               let x = index % cols;
@@ -45,20 +62,31 @@ class Grid extends Component {
               let y = Math.floor(index / cols);
               let posy = y * height;
               let fill = sq === "." ? "#111111" : "#ffffff";
+              let gridNum = gridnums[index] == 0 ? null : gridnums[index];
 
               return (
-                <Svg.Rect
-                  key={index}
-                  x={posx}
-                  y={posy}
-                  width={squareWidth}
-                  height={squareWidth}
-                  strokeWidth={1}
-                  stroke="#111111"
-                  fill={fill}
-                  onPress={this._gridSquarePress.bind(this, index)}
-                  style={{ backgroundColor: "red", padding: 0 }}
-                />
+                <Svg.G x={posx} y={posy} key={index} tabIndex="0">
+                  <Svg.Rect
+                    width={squareWidth}
+                    height={squareWidth}
+                    strokeWidth={1}
+                    stroke="#111111"
+                    fill={fill}
+                    onPress={this._gridSquarePress.bind(this, index)}
+                    style={{ backgroundColor: "red", padding: 0 }}
+                  />
+                  <Svg.Text
+                    x="2"
+                    y="11"
+                    font-family={"Verdana"}
+                    font-size="2"
+                    stroke="blue"
+                    strokeWidth=".5"
+                    id="clue1"
+                  >
+                    {gridNum}
+                  </Svg.Text>
+                </Svg.G>
               );
             })}
           </Svg.G>
