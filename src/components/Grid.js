@@ -16,26 +16,35 @@ class Grid extends Component {
   };
 
   _gridSquarePress = g => {
-    // console.log("HERE!!!!!", g);
     let { puzzle } = this.state;
     puzzle.grid[g] = puzzle.grid[g] == "." ? "" : ".";
     this._gridRenumber();
-    this.setState({ puzzle: puzzle });
+    // this.setState({ puzzle: puzzle });
   };
 
   _gridRenumber = _ => {
     let num = 0;
     let gridnums = [];
-    this.state.puzzle.grid.forEach((e, i) => {
+    let { size, grid } = this.state.puzzle;
+    grid.forEach((e, i) => {
       if (e == ".") {
         gridnums[i] = 0;
       } else {
-        num += 1;
-        gridnums[i] = num;
+        if (i < size.cols) {
+          num += 1;
+          gridnums[i] = num;
+        } else {
+          if (grid[i - 1] == "." || i % size.cols == 0) {
+            num += 1;
+            gridnums[i] = num;
+          } else {
+            gridnums[i] = 0;
+          }
+        }
       }
     });
     this.state.puzzle.gridnums = gridnums;
-    this.setState({ puzzle: this.state.puzzle.gridnums });
+    this.setState({ puzzle: this.state.puzzle });
   };
 
   componentWillMount = _ => {
@@ -76,6 +85,7 @@ class Grid extends Component {
                     style={{ backgroundColor: "red", padding: 0 }}
                   />
                   <Svg.Text
+                    style={{ pointerEvents: "none" }}
                     x="2"
                     y="11"
                     font-family={"Verdana"}
