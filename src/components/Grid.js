@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Constants, Svg } from "expo";
 import _ from "lodash";
 import { StyleSheet, Dimensions, Alert } from "react-native";
-import { Container, Content, Spinner } from "native-base";
+import { Container, Content, Spinner, Button, Text } from "native-base";
 
 class Grid extends Component {
   state = {
@@ -30,16 +30,16 @@ class Grid extends Component {
       if (e == ".") {
         gridnums[i] = 0;
       } else {
-        if (i < size.cols) {
+        if (
+          i < size.cols ||
+          grid[i - 1] == "." ||
+          grid[i - size.cols] == "." ||
+          i % size.cols == 0
+        ) {
           num += 1;
           gridnums[i] = num;
         } else {
-          if (grid[i - 1] == "." || i % size.cols == 0) {
-            num += 1;
-            gridnums[i] = num;
-          } else {
-            gridnums[i] = 0;
-          }
+          gridnums[i] = 0;
         }
       }
     });
@@ -87,9 +87,9 @@ class Grid extends Component {
                   <Svg.Text
                     style={{ pointerEvents: "none" }}
                     x="2"
-                    y="11"
+                    y="8"
                     font-family={"Verdana"}
-                    font-size="2"
+                    fontSize="8px"
                     stroke="blue"
                     strokeWidth=".5"
                     id="clue1"
