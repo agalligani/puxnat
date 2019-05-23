@@ -20,7 +20,8 @@ export default class CreateGrid extends React.Component {
     allGrids: [],
     newGridsList: [],
     gridsInList: [],
-    clickedGrid: {}
+    clickedGrid: {},
+    action: "editGrid"
   };
 
   addNewGrid = async name => {
@@ -79,7 +80,8 @@ export default class CreateGrid extends React.Component {
       //   );
       // },
       currentGrid: this.state.currentGrid,
-      newGrid: false
+      newGrid: false,
+      action: "editPuzzle"
     });
   };
 
@@ -110,7 +112,7 @@ export default class CreateGrid extends React.Component {
       <Container>
         <Content>
           <Body>
-            <Grid puzzle={this.state.currentGrid} />
+            <Grid puzzle={this.state.currentGrid} action={this.state.action} />
           </Body>
         </Content>
         <Fab

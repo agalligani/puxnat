@@ -12,13 +12,16 @@ class Grid extends Component {
     puzzle: {},
     showNumbers: true,
     showLetters: false,
-    clickedSquare: null
+    clickedSquare: null,
+    action: null
   };
 
-  _gridSquarePress = g => {
+  _gridSquarePress = (g, action) => {
     let { puzzle } = this.state;
     puzzle.grid[g] = puzzle.grid[g] == "." ? "" : ".";
-    this._gridRenumber();
+    if (this.state.action == "editGrid") {
+      this._gridRenumber();
+    }
     // this.setState({ puzzle: puzzle });
   };
 
@@ -49,7 +52,9 @@ class Grid extends Component {
 
   componentWillMount = _ => {
     if (this.props.puzzle.grid) {
+      console.log(this.props.action);
       this.setState({ puzzle: this.props.puzzle });
+      this.setState({ action: this.props.action });
     }
   };
 
@@ -58,6 +63,7 @@ class Grid extends Component {
       let { grid, size, gridnums } = this.state.puzzle;
       let { cols, rows } = size;
       let { width } = Dimensions.get("window");
+      let action = this.state.action;
       // Adjust for Native Base container?
       width = width - 32;
       return (
@@ -81,7 +87,7 @@ class Grid extends Component {
                     strokeWidth={1}
                     stroke="#111111"
                     fill={fill}
-                    onPress={this._gridSquarePress.bind(this, index)}
+                    onPress={this._gridSquarePress.bind(this, index, action)}
                     style={{ backgroundColor: "red", padding: 0 }}
                   />
                   <Svg.Text

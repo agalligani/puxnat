@@ -47,7 +47,8 @@ export default class GridList extends React.Component {
       },
       newGrid: newGrid,
       gridsInList: this.state.grids,
-      currentGrid: this.state.currentGrid
+      currentGrid: this.state.currentGrid,
+      action: "editGrid"
     });
   };
 
