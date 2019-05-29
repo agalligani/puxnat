@@ -1,5 +1,5 @@
 import React from "react";
-import { AsyncStorage, StyleSheet, Alert } from "react-native";
+import { AsyncStorage, StyleSheet, Alert, TextInput } from "react-native";
 import prompt from "react-native-prompt-android";
 import Grid from "../components/Grid";
 import {
@@ -17,10 +17,13 @@ import {
 export default class CreateGrid extends React.Component {
   state = {
     currentGrid: [],
+    currentPuzzle: [],
     allGrids: [],
+    allPuzzles: [],
     newGridsList: [],
     gridsInList: [],
     clickedGrid: {},
+    isPuzzle: false,
     action: "editGrid"
   };
 
@@ -64,22 +67,10 @@ export default class CreateGrid extends React.Component {
   };
 
   _handleCreatePuzzlePress = _ => {
+    currentPuzzle = {};
+    currentPuzzle.puzzle = this.state.currentGrid;
     this.props.navigation.navigate("CreatePuzzle", {
-      // saveGridById: async grid => {
-      //   await this._removeGrid(grid);
-      //   this.setState({
-      //     grids: this.state.grids.concat({
-      //       name: grid.id,
-      //       id: grid.id,
-      //       grid: grid
-      //     })
-      //   });
-      //   await AsyncStorage.setItem(
-      //     "allGrids",
-      //     JSON.stringify(this.state.grids)
-      //   );
-      // },
-      currentGrid: this.state.currentGrid,
+      currentGrid: currentPuzzle,
       newGrid: false,
       action: "editPuzzle"
     });
@@ -111,9 +102,7 @@ export default class CreateGrid extends React.Component {
     return (
       <Container>
         <Content>
-          <Body>
-            <Grid puzzle={this.state.currentGrid} action={this.state.action} />
-          </Body>
+          <Grid puzzle={this.state.currentGrid} action={this.state.action} />
         </Content>
         <Fab
           active={false}
