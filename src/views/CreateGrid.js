@@ -67,8 +67,11 @@ export default class CreateGrid extends React.Component {
   };
 
   _handleCreatePuzzlePress = _ => {
-    currentPuzzle = {};
+    let currentPuzzle = {};
     currentPuzzle.puzzle = this.state.currentGrid;
+    let gridId = currentPuzzle.puzzle.id;
+    currentPuzzle.puzzle.gridId = gridId;
+    currentPuzzle.puzzle.id = null;
     this.props.navigation.navigate("CreatePuzzle", {
       currentGrid: currentPuzzle,
       newGrid: false,

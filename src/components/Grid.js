@@ -4,6 +4,7 @@ import _ from "lodash";
 import { StyleSheet, Dimensions, Alert } from "react-native";
 import { Container, Content, Body, Spinner } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
+import { squareClick } from "../utils/puzzle";
 
 class Grid extends Component {
   state = {
@@ -27,11 +28,12 @@ class Grid extends Component {
     }
   };
 
-  _squareClick = (p, g, l) => {
-    if (p.grid[g] == ".") {
+  _squareClick = (puzzle, g, l) => {
+    if (puzzle.grid[g] == ".") {
       this.setState({ clickedSquare: null });
     } else {
-      this.setState({ clickedSquare: g });
+      puzzle.grid[g] = "X";
+      this.setState({ puzzle: puzzle, clickedSquare: g });
     }
   };
 
@@ -61,6 +63,7 @@ class Grid extends Component {
   };
 
   componentWillMount = _ => {
+    console.log("CWM");
     if (this.props.puzzle.grid) {
       this.setState({ puzzle: this.props.puzzle });
       this.setState({ action: this.props.action });
@@ -68,16 +71,13 @@ class Grid extends Component {
   };
 
   render() {
-    // console.log("grid", this.state.puzzle);
-    if (this.state.puzzle.currentGrid) {
-      console.log("OY");
-    }
+    console.log("render");
     if (this.state.puzzle.grid) {
       let { grid, size, gridnums } = this.state.puzzle;
       let { cols, rows } = size;
       let { width, height } = Dimensions.get("window");
       let action = this.state.action;
-      // Adjust for Native Base container?
+      // Adjust for container
       width = width - 32;
       return (
         <Body>
@@ -92,7 +92,7 @@ class Grid extends Component {
                 let posy = y * height;
                 let fill = sq === "." ? "#111111" : "#ffffff";
                 let gridNum = gridnums[index] == 0 ? null : gridnums[index];
-                let letter = null;
+                let letter = sq;
                 let textElement = (
                   <Svg.Text
                     x="7"
@@ -102,14 +102,17 @@ class Grid extends Component {
                     stroke="blue"
                     fill="grey"
                     strokeWidth=".5"
-                    id="letter"
-                    textContent={letter}
+                    id={"letter" + index}
                   >
-                    n
+                    {letter}
                   </Svg.Text>
                 );
 
-                if (this.state.action == "editGrid" || grid[index] == ".") {
+                if (
+                  this.state.action == "editGrid" ||
+                  grid[index] == "." ||
+                  grid[index] == ""
+                ) {
                   letter = null;
                 } else {
                   letter = textElement;
@@ -118,6 +121,7 @@ class Grid extends Component {
                 return (
                   <Svg.G x={posx} y={posy} key={index} tabIndex="0">
                     <Svg.Rect
+                      className="activeSquare"
                       width={squareWidth}
                       height={squareWidth}
                       strokeWidth={1}
@@ -127,7 +131,6 @@ class Grid extends Component {
                       style={{ backgroundColor: "red", padding: 0 }}
                     />
                     <Svg.Text
-                      style={{ pointerEvents: "none" }}
                       x="2"
                       y="8"
                       font-family={"Verdana"}
@@ -173,7 +176,7 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     backgroundColor: "#ecf0f1"
   },
-  SvgText: {
+  activeSquare: {
     backgroundColor: "red"
   }
 });

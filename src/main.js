@@ -11,10 +11,11 @@ const RootStack = createStackNavigator(
     Home: GridList,
     PuzzleList: PuzzleList,
     CreateGrid: CreateGrid,
-    CreatePuzzle: CreatePuzzle
+    CreatePuzzle: CreatePuzzle,
+    EditPuzzle: CreatePuzzle
   },
   {
-    initialRouteName: "Home"
+    initialRouteName: "PuzzleList"
   }
 );
 
