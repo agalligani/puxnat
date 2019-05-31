@@ -15,6 +15,7 @@ class Grid extends Component {
     showNumbers: true,
     showLetters: false,
     clickedSquare: null,
+    activeSquare: null,
     action: "editGrid"
   };
 
@@ -32,8 +33,9 @@ class Grid extends Component {
     if (puzzle.grid[g] == ".") {
       this.setState({ clickedSquare: null });
     } else {
-      puzzle.grid[g] = "X";
-      this.setState({ puzzle: puzzle, clickedSquare: g });
+      // puzzle.grid[g] = "X";
+      this.setState({ puzzle: puzzle, clickedSquare: g, activeSquare: g });
+      this.ref.focus();
     }
   };
 
@@ -93,16 +95,19 @@ class Grid extends Component {
                 let fill = sq === "." ? "#111111" : "#ffffff";
                 let gridNum = gridnums[index] == 0 ? null : gridnums[index];
                 let letter = sq;
+                let squareFill =
+                  index == this.state.activeSquare ? "skyblue" : fill;
                 let textElement = (
                   <Svg.Text
-                    x="7"
-                    y={squareWidth - 4}
+                    x={squareWidth * 0.25}
+                    y={squareWidth * 0.8}
                     font-family={"Verdana"}
                     fontSize="18px"
                     stroke="blue"
                     fill="grey"
                     strokeWidth=".5"
                     id={"letter" + index}
+                    onPress={this._gridSquarePress.bind(this, index, letter)}
                   >
                     {letter}
                   </Svg.Text>
@@ -121,15 +126,14 @@ class Grid extends Component {
                 return (
                   <Svg.G x={posx} y={posy} key={index} tabIndex="0">
                     <Svg.Rect
-                      className="activeSquare"
                       width={squareWidth}
                       height={squareWidth}
                       strokeWidth={1}
                       stroke="#111111"
-                      fill={fill}
+                      fill={squareFill}
                       onPress={this._gridSquarePress.bind(this, index, letter)}
-                      style={{ backgroundColor: "red", padding: 0 }}
                     />
+                    {letter}
                     <Svg.Text
                       x="2"
                       y="8"
@@ -141,19 +145,16 @@ class Grid extends Component {
                     >
                       {gridNum}
                     </Svg.Text>
-                    {letter}
                   </Svg.G>
                 );
               })}
             </Svg.G>
           </Svg>
           <TextInput
-            style={{
-              backgroundColor: "#DDDDDD",
-              height: 20,
-              width: 200,
-              marginTop: 10
-            }}
+            id="textStage"
+            style={styles.textInput}
+            className="textInput"
+            ref={ref => (this.ref = ref)}
           />
         </Body>
       );
@@ -178,6 +179,12 @@ const styles = StyleSheet.create({
   },
   activeSquare: {
     backgroundColor: "red"
+  },
+  textInput: {
+    backgroundColor: "skyblue",
+    height: 20,
+    width: 200,
+    marginTop: 10
   }
 });
 
