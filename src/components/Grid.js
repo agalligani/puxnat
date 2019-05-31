@@ -151,7 +151,7 @@ class Grid extends Component {
             </Svg.G>
           </Svg>
           <TextInput
-            id="textStage"
+            // id="textStage"
             style={styles.textInput}
             className="textInput"
             ref={ref => (this.ref = ref)}
