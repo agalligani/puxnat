@@ -16,7 +16,42 @@ class Grid extends Component {
     showLetters: false,
     clickedSquare: null,
     activeSquare: null,
-    action: "editGrid"
+    action: "editGrid",
+    cursorDirection: null
+  };
+
+  handleKeyPress = event => {
+    console.log("e", event.nativeEvent.key);
+    let { puzzle, activeSquare } = this.state;
+    let letter = "";
+    if (event.nativeEvent.key != "Backspace") {
+      letter = event.nativeEvent.key.toUpperCase();
+    }
+    puzzle.grid[activeSquare] = letter;
+    this.setState({ puzzle: puzzle });
+    this.setNextSquare();
+  };
+  setNextSquare = _ => {
+    let { puzzle, activeSquare, cursorDirection } = this.state;
+    let { grid } = puzzle;
+    cleanSquares = grid
+      .map((g, i) => [i, g])
+      .filter(g => g[1] != ".")
+      .map(g => g[0]);
+
+    if (cursorDirection != "down") {
+      nextSquareIndex =
+        cleanSquares.length < cleanSquares.indexOf(activeSquare) + 1
+          ? 0
+          : cleanSquares.indexOf(activeSquare) + 1;
+      nextSquare = cleanSquares[nextSquareIndex];
+      if (puzzle.grid)
+        this.setState({
+          puzzle: puzzle,
+          clickedSquare: nextSquare,
+          activeSquare: nextSquare
+        });
+    }
   };
 
   _gridSquarePress = (g, l) => {
@@ -25,15 +60,18 @@ class Grid extends Component {
       puzzle.grid[g] = puzzle.grid[g] == "." ? "" : ".";
       this._gridRenumber();
     } else {
-      this._squareClick(puzzle, g, l);
+      this._puzzleClick(puzzle, g, l);
     }
   };
 
-  _squareClick = (puzzle, g, l) => {
+  _puzzleClick = (puzzle, g, l) => {
     if (puzzle.grid[g] == ".") {
       this.setState({ clickedSquare: null });
     } else {
       // puzzle.grid[g] = "X";
+      let cursorDirection =
+        this.state.cursorDirection == "across" ? "down" : "across";
+      this.setState({ cursorDirection: cursorDirection });
       this.setState({ puzzle: puzzle, clickedSquare: g, activeSquare: g });
       this.ref.focus();
     }
@@ -152,6 +190,8 @@ class Grid extends Component {
           </Svg>
           <TextInput
             // id="textStage"
+            onKeyPress={this.handleKeyPress}
+            autoCompleteType="off"
             style={styles.textInput}
             className="textInput"
             ref={ref => (this.ref = ref)}

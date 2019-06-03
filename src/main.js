@@ -15,8 +15,8 @@ const RootStack = createStackNavigator(
     EditPuzzle: CreatePuzzle
   },
   {
-    // initialRouteName: "PuzzleList"
-    initialRouteName: "Home"
+    initialRouteName: "PuzzleList"
+    // initialRouteName: "Home"
   }
 );
 
