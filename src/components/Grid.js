@@ -17,7 +17,7 @@ class Grid extends Component {
     clickedSquare: null,
     activeSquare: null,
     action: "editGrid",
-    cursorDirection: null
+    cursorDirection: "across"
   };
 
   handleKeyPress = event => {
@@ -27,31 +27,61 @@ class Grid extends Component {
     if (event.nativeEvent.key != "Backspace") {
       letter = event.nativeEvent.key.toUpperCase();
     }
+    console.log(activeSquare);
     puzzle.grid[activeSquare] = letter;
     this.setState({ puzzle: puzzle });
     this.setNextSquare();
   };
-  setNextSquare = _ => {
+
+  setNextSquare = () => {
     let { puzzle, activeSquare, cursorDirection } = this.state;
     let { grid } = puzzle;
+    let { cols, rows } = puzzle.size;
     cleanSquares = grid
       .map((g, i) => [i, g])
       .filter(g => g[1] != ".")
       .map(g => g[0]);
 
-    if (cursorDirection != "down") {
+    if (cursorDirection == "across") {
       nextSquareIndex =
         cleanSquares.length < cleanSquares.indexOf(activeSquare) + 1
           ? 0
           : cleanSquares.indexOf(activeSquare) + 1;
       nextSquare = cleanSquares[nextSquareIndex];
-      if (puzzle.grid)
-        this.setState({
-          puzzle: puzzle,
-          clickedSquare: nextSquare,
-          activeSquare: nextSquare
+    } else {
+      let cleanSquaresByColumn = _.range(cols).map(col => {
+        let i = cleanSquares.filter(sq => {
+          let row = Math.ceil(sq / cols);
+          // console.log(row * cols - sq);
+          let adjustedForZeroCol = col == 0 ? col + cols : col;
+          return cols - (row * cols - sq) == adjustedForZeroCol;
         });
+        return i;
+      });
+
+      let activeSquareRow = Math.ceil(activeSquare / cols);
+      console.log("activeSquare", activeSquare, "row", activeSquareRow);
+      let activeSquareCol = cols - (activeSquareRow * cols - activeSquare);
+      let activeSquarePosition = cleanSquaresByColumn[activeSquareCol].indexOf(
+        activeSquare
+      );
+      if (
+        activeSquarePosition ==
+        cleanSquaresByColumn[activeSquareCol].length - 1
+      ) {
+        nextSquare = cleanSquaresByColumn[activeSquareCol + 1][0];
+      } else {
+        nextSquare =
+          cleanSquaresByColumn[activeSquareCol][activeSquarePosition + 1];
+      }
     }
+
+    if (puzzle.grid)
+      this.setState({
+        puzzle: puzzle,
+        clickedSquare: nextSquare,
+        activeSquare: nextSquare
+      });
   };
 
   _gridSquarePress = (g, l) => {
@@ -68,10 +98,12 @@ class Grid extends Component {
     if (puzzle.grid[g] == ".") {
       this.setState({ clickedSquare: null });
     } else {
-      // puzzle.grid[g] = "X";
-      let cursorDirection =
-        this.state.cursorDirection == "across" ? "down" : "across";
-      this.setState({ cursorDirection: cursorDirection });
+      if (g == this.state.activeSquare) {
+        //click on same sq? toggle
+        let cursorDirection =
+          this.state.cursorDirection == "across" ? "down" : "across";
+        this.setState({ cursorDirection: cursorDirection });
+      }
       this.setState({ puzzle: puzzle, clickedSquare: g, activeSquare: g });
       this.ref.focus();
     }
@@ -216,9 +248,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: Constants.statusBarHeight,
     backgroundColor: "#ecf0f1"
-  },
-  activeSquare: {
-    backgroundColor: "red"
   },
   textInput: {
     backgroundColor: "skyblue",
