@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Constants, Svg } from "expo";
 import _ from "lodash";
-import { StyleSheet, Dimensions, Alert } from "react-native";
+import { StyleSheet, Dimensions, Alert, TextInput } from "react-native";
 import { Container, Content, Body, Spinner } from "native-base";
-import { TextInput } from "react-native-gesture-handler";
+// import { TextInput } from "react-native-gesture-handler";
 import { squareClick } from "../utils/puzzle";
 
 class Grid extends Component {
@@ -60,7 +60,6 @@ class Grid extends Component {
       });
 
       let activeSquareRow = Math.ceil(activeSquare / cols);
-      console.log("activeSquare", activeSquare, "row", activeSquareRow);
       let activeSquareCol = cols - (activeSquareRow * cols - activeSquare);
       let activeSquarePosition = cleanSquaresByColumn[activeSquareCol].indexOf(
         activeSquare
@@ -99,7 +98,6 @@ class Grid extends Component {
       this.setState({ clickedSquare: null });
     } else {
       if (g == this.state.activeSquare) {
-        //click on same sq? toggle
         let cursorDirection =
           this.state.cursorDirection == "across" ? "down" : "across";
         this.setState({ cursorDirection: cursorDirection });
@@ -221,9 +219,10 @@ class Grid extends Component {
             </Svg.G>
           </Svg>
           <TextInput
-            // id="textStage"
             onKeyPress={this.handleKeyPress}
-            autoCompleteType="off"
+            autoCorrect={false}
+            autoComplete={false}
+            autoCompleteType={false}
             style={styles.textInput}
             className="textInput"
             ref={ref => (this.ref = ref)}
