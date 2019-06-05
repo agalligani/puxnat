@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Constants, Svg } from "expo";
 import _ from "lodash";
-import { StyleSheet, Dimensions, Alert, TextInput } from "react-native";
+import { StyleSheet, Dimensions, Alert } from "react-native";
 import { Container, Content, Body, Spinner } from "native-base";
-// import { TextInput } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import { squareClick } from "../utils/puzzle";
 
 class Grid extends Component {
@@ -24,16 +24,85 @@ class Grid extends Component {
     console.log("e", event.nativeEvent.key);
     let { puzzle, activeSquare } = this.state;
     let letter = "";
-    if (event.nativeEvent.key != "Backspace") {
+    if (event.nativeEvent.key == "Backspace") {
+      this.setNextSquare("backwards");
+    } else {
       letter = event.nativeEvent.key.toUpperCase();
+      puzzle.grid[activeSquare] = letter;
+      this.setState({ puzzle: puzzle });
+      this.setNextSquare();
     }
-    console.log(activeSquare);
-    puzzle.grid[activeSquare] = letter;
-    this.setState({ puzzle: puzzle });
-    this.setNextSquare();
   };
 
-  setNextSquare = () => {
+  setNextSquare = (direction = "forwards") => {
+    let { puzzle, activeSquare, cursorDirection } = this.state;
+    let { grid } = puzzle;
+    let { cols, rows } = puzzle.size;
+    cleanSquares = grid
+      .map((g, i) => [i, g])
+      .filter(g => g[1] != ".")
+      .map(g => g[0]);
+
+    if (cursorDirection == "across") {
+      if (direction == "forwards") {
+        nextSquareIndex =
+          cleanSquares.length < cleanSquares.indexOf(activeSquare) + 1
+            ? 0
+            : cleanSquares.indexOf(activeSquare) + 1;
+      } else {
+        nextSquareIndex =
+          cleanSquares.indexOf(activeSquare) - 1 == 0
+            ? cleanSquares.length
+            : cleanSquares.indexOf(activeSquare) - 1;
+      }
+      nextSquare = cleanSquares[nextSquareIndex];
+    } else {
+      let cleanSquaresByColumn = _.range(cols).map(col => {
+        let i = cleanSquares.filter(sq => {
+          let row = Math.ceil(sq / cols);
+          // console.log(row * cols - sq);
+          let adjustedForZeroCol = col == 0 ? col + cols : col;
+          return cols - (row * cols - sq) == adjustedForZeroCol;
+        });
+        return i;
+      });
+
+      let activeSquareRow = Math.ceil(activeSquare / cols);
+      let activeSquareCol = cols - (activeSquareRow * cols - activeSquare);
+      let activeSquarePosition = cleanSquaresByColumn[activeSquareCol].indexOf(
+        activeSquare
+      );
+      if (direction == "forwards") {
+        if (
+          activeSquarePosition ==
+          cleanSquaresByColumn[activeSquareCol].length - 1
+        ) {
+          nextSquare = cleanSquaresByColumn[activeSquareCol + 1][0];
+        } else {
+          nextSquare =
+            cleanSquaresByColumn[activeSquareCol][activeSquarePosition + 1];
+        }
+      } else {
+        if (activeSquarePosition == 0) {
+          prevColLength = cleanSquaresByColumn[activeSquareCol - 1].length;
+          nextSquare =
+            cleanSquaresByColumn[activeSquareCol - 1][prevColLength - 1];
+          console.log(activeSquareCol - 1, nextSquare);
+        } else {
+          nextSquare =
+            cleanSquaresByColumn[activeSquareCol][activeSquarePosition - 1];
+        }
+      }
+    }
+    if (puzzle.grid)
+      this.setState({
+        puzzle: puzzle,
+        clickedSquare: nextSquare,
+        activeSquare: nextSquare
+      });
+  };
+
+  setPrevSquare = () => {
     let { puzzle, activeSquare, cursorDirection } = this.state;
     let { grid } = puzzle;
     let { cols, rows } = puzzle.size;
@@ -220,6 +289,7 @@ class Grid extends Component {
           </Svg>
           <TextInput
             onKeyPress={this.handleKeyPress}
+            onKeyDown={this.handleKeyDown}
             autoCorrect={false}
             autoComplete={false}
             autoCompleteType={false}
