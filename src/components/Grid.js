@@ -16,8 +16,31 @@ class Grid extends Component {
     showLetters: false,
     clickedSquare: null,
     activeSquare: null,
+    highlitSquares: [],
     action: "editGrid",
-    cursorDirection: "across"
+    cursorDirection: "across",
+    whiteSquares: []
+  };
+
+  setCleanSquares = () => {
+    let { grid } = this.state.puzzle;
+    return grid
+      .map((g, i) => [i, g])
+      .filter(g => g[1] != ".")
+      .map(g => g[0]);
+  };
+
+  setCleanSquaresByColumn = () => {
+    let { cols } = this.state.puzzle.size;
+    let whiteSquares = this.state.whiteSquares;
+    return _.range(cols).map(col => {
+      let i = whiteSquares.filter(sq => {
+        let row = Math.ceil(sq / cols);
+        let adjustedForZeroCol = col == 0 ? col + cols : col;
+        return cols - (row * cols - sq) == adjustedForZeroCol;
+      });
+      return i;
+    });
   };
 
   handleKeyPress = event => {
@@ -27,7 +50,8 @@ class Grid extends Component {
     if (event.nativeEvent.key == "Backspace") {
       this.setNextSquare("backwards");
     } else {
-      letter = event.nativeEvent.key.toUpperCase();
+      letter =
+        event.nativeEvent.key == " " ? "" : event.nativeEvent.key.toUpperCase();
       puzzle.grid[activeSquare] = letter;
       this.setState({ puzzle: puzzle });
       this.setNextSquare();
@@ -38,10 +62,9 @@ class Grid extends Component {
     let { puzzle, activeSquare, cursorDirection } = this.state;
     let { grid } = puzzle;
     let { cols, rows } = puzzle.size;
-    cleanSquares = grid
-      .map((g, i) => [i, g])
-      .filter(g => g[1] != ".")
-      .map(g => g[0]);
+
+    cleanSquares = this.setCleanSquares();
+    this.setState({ whiteSquares: cleanSquares });
 
     if (cursorDirection == "across") {
       if (direction == "forwards") {
@@ -57,16 +80,7 @@ class Grid extends Component {
       }
       nextSquare = cleanSquares[nextSquareIndex];
     } else {
-      let cleanSquaresByColumn = _.range(cols).map(col => {
-        let i = cleanSquares.filter(sq => {
-          let row = Math.ceil(sq / cols);
-          // console.log(row * cols - sq);
-          let adjustedForZeroCol = col == 0 ? col + cols : col;
-          return cols - (row * cols - sq) == adjustedForZeroCol;
-        });
-        return i;
-      });
-
+      let cleanSquaresByColumn = this.setCleanSquaresByColumn();
       let activeSquareRow = Math.ceil(activeSquare / cols);
       let activeSquareCol = cols - (activeSquareRow * cols - activeSquare);
       let activeSquarePosition = cleanSquaresByColumn[activeSquareCol].indexOf(
@@ -102,54 +116,48 @@ class Grid extends Component {
       });
   };
 
-  setPrevSquare = () => {
-    let { puzzle, activeSquare, cursorDirection } = this.state;
-    let { grid } = puzzle;
-    let { cols, rows } = puzzle.size;
-    cleanSquares = grid
-      .map((g, i) => [i, g])
-      .filter(g => g[1] != ".")
-      .map(g => g[0]);
+  setHighlitSquares = g => {
+    let activeSquare = g; // latency issue
+    let { puzzle, cursorDirection } = this.state;
+    let { rows, cols } = puzzle.size;
+    cleanSquares = this.setCleanSquares();
+    let start = Math.floor(activeSquare / cols) * cols - 1;
+    let stop = Math.ceil(activeSquare / cols) * cols;
+    let middlePos = cleanSquares.indexOf(activeSquare);
+    console.log(activeSquare, middlePos, start, stop);
+    if (middlePos == -1) {
+      return;
+    }
+    let highlitSquares = [];
+    let nextInSequence = cleanSquares[middlePos] - 1;
 
-    if (cursorDirection == "across") {
-      nextSquareIndex =
-        cleanSquares.length < cleanSquares.indexOf(activeSquare) + 1
-          ? 0
-          : cleanSquares.indexOf(activeSquare) + 1;
-      nextSquare = cleanSquares[nextSquareIndex];
-    } else {
-      let cleanSquaresByColumn = _.range(cols).map(col => {
-        let i = cleanSquares.filter(sq => {
-          let row = Math.ceil(sq / cols);
-          // console.log(row * cols - sq);
-          let adjustedForZeroCol = col == 0 ? col + cols : col;
-          return cols - (row * cols - sq) == adjustedForZeroCol;
-        });
-        return i;
-      });
-
-      let activeSquareRow = Math.ceil(activeSquare / cols);
-      let activeSquareCol = cols - (activeSquareRow * cols - activeSquare);
-      let activeSquarePosition = cleanSquaresByColumn[activeSquareCol].indexOf(
-        activeSquare
-      );
-      if (
-        activeSquarePosition ==
-        cleanSquaresByColumn[activeSquareCol].length - 1
-      ) {
-        nextSquare = cleanSquaresByColumn[activeSquareCol + 1][0];
-      } else {
-        nextSquare =
-          cleanSquaresByColumn[activeSquareCol][activeSquarePosition + 1];
-      }
+    if (activeSquare > start) {
+      let i = middlePos;
+      do {
+        nextInSequence = cleanSquares[i] - 1;
+        if (cleanSquares[i] != activeSquare) {
+          highlitSquares.push(cleanSquares[i]);
+        }
+        i = i - 1;
+      } while (cleanSquares[i] > start && cleanSquares[i] == nextInSequence);
     }
 
-    if (puzzle.grid)
-      this.setState({
-        puzzle: puzzle,
-        clickedSquare: nextSquare,
-        activeSquare: nextSquare
-      });
+    nextInSequence = activeSquare + 1;
+    if (activeSquare < stop) {
+      let i = middlePos;
+      do {
+        nextInSequence = cleanSquares[i] + 1;
+        if (cleanSquares[i] != activeSquare) {
+          highlitSquares.push(cleanSquares[i]);
+        }
+        i = i + 1;
+        console.log(i, cleanSquares[i]);
+      } while (cleanSquares[i] < stop && cleanSquares[i] == nextInSequence);
+    }
+
+    // console.log(highlitSquares);
+    this.setState({ highlitSquares: highlitSquares });
+    return highlitSquares;
   };
 
   _gridSquarePress = (g, l) => {
@@ -164,7 +172,11 @@ class Grid extends Component {
 
   _puzzleClick = (puzzle, g, l) => {
     if (puzzle.grid[g] == ".") {
-      this.setState({ clickedSquare: null });
+      this.setState({
+        clickedSquare: null,
+        activeSquare: null,
+        highlitSquares: []
+      });
     } else {
       if (g == this.state.activeSquare) {
         let cursorDirection =
@@ -172,6 +184,7 @@ class Grid extends Component {
         this.setState({ cursorDirection: cursorDirection });
       }
       this.setState({ puzzle: puzzle, clickedSquare: g, activeSquare: g });
+      this.setHighlitSquares(g);
       this.ref.focus();
     }
   };
@@ -202,7 +215,6 @@ class Grid extends Component {
   };
 
   componentWillMount = _ => {
-    console.log("CWM");
     if (this.props.puzzle.grid) {
       this.setState({ puzzle: this.props.puzzle });
       this.setState({ action: this.props.action });
@@ -210,7 +222,6 @@ class Grid extends Component {
   };
 
   render() {
-    console.log("render");
     if (this.state.puzzle.grid) {
       let { grid, size, gridnums } = this.state.puzzle;
       let { cols, rows } = size;
@@ -233,7 +244,11 @@ class Grid extends Component {
                 let gridNum = gridnums[index] == 0 ? null : gridnums[index];
                 let letter = sq;
                 let squareFill =
-                  index == this.state.activeSquare ? "skyblue" : fill;
+                  index == this.state.activeSquare ? "#bacaff" : fill;
+                squareFill =
+                  this.state.highlitSquares.indexOf(index) > -1
+                    ? "#fff155"
+                    : squareFill;
                 let textElement = (
                   <Svg.Text
                     x={squareWidth * 0.25}
@@ -249,7 +264,6 @@ class Grid extends Component {
                     {letter}
                   </Svg.Text>
                 );
-
                 if (
                   this.state.action == "editGrid" ||
                   grid[index] == "." ||
