@@ -83,6 +83,7 @@ class Grid extends Component {
       let cleanSquaresByColumn = this.setCleanSquaresByColumn();
       let activeSquareRow = Math.ceil(activeSquare / cols);
       let activeSquareCol = cols - (activeSquareRow * cols - activeSquare);
+      console.log("---->", cleanSquaresByColumn, activeSquareCol);
       let activeSquarePosition = cleanSquaresByColumn[activeSquareCol].indexOf(
         activeSquare
       );
@@ -116,7 +117,7 @@ class Grid extends Component {
       });
   };
 
-  setHighlitSquares = g => {
+  setHighlitSquaresAcross = g => {
     let activeSquare = g; // latency issue
     let { puzzle, cursorDirection } = this.state;
     let { rows, cols } = puzzle.size;
@@ -154,8 +155,67 @@ class Grid extends Component {
         console.log(i, cleanSquares[i]);
       } while (cleanSquares[i] < stop && cleanSquares[i] == nextInSequence);
     }
+    this.setState({ highlitSquares: highlitSquares });
+    return highlitSquares;
+  };
 
-    // console.log(highlitSquares);
+  setHighlitSquaresDown = g => {
+    let activeSquare = g; // latency issue
+    let { rows, cols } = this.state.puzzle.size;
+    cleanSquares = this.setCleanSquares();
+    this.setState({ whiteSquares: cleanSquares });
+    let whiteSquaresByColumn = this.setCleanSquaresByColumn();
+    let activeSquareRow = Math.ceil(activeSquare / cols);
+    let activeSquareCol = cols - (activeSquareRow * cols - activeSquare);
+    console.log("activeSquareCol", activeSquareCol);
+    let start = activeSquareCol; //start is first square in col
+    let stop = rows * cols - activeSquareCol;
+    console.log("stop", stop);
+    // console.log(
+    //   "---->",
+    //   whiteSquaresByColumn[activeSquareCol],
+    //   activeSquareCol
+    // );
+    let middlePos = whiteSquaresByColumn[activeSquareCol].indexOf(activeSquare);
+    console.log("here", activeSquare, middlePos, start, stop);
+    if (middlePos == -1) {
+      return;
+    }
+    let highlitSquares = [];
+    let nextInSequence =
+      whiteSquaresByColumn[activeSquareCol][middlePos] - cols;
+    console.log("nextInSequence", nextInSequence, "start", start);
+
+    if (activeSquare > start) {
+      let i = middlePos;
+      do {
+        nextInSequence = whiteSquaresByColumn[activeSquareCol][i] - cols;
+        if (whiteSquaresByColumn[activeSquareCol][i] != activeSquare) {
+          highlitSquares.push(whiteSquaresByColumn[activeSquareCol][i]);
+        }
+        i = i - 1;
+      } while (
+        whiteSquaresByColumn[activeSquareCol][i] >= start &&
+        whiteSquaresByColumn[activeSquareCol][i] == nextInSequence
+      );
+    }
+
+    nextInSequence = activeSquare + cols;
+
+    if (activeSquare < stop) {
+      let i = middlePos;
+      do {
+        nextInSequence = whiteSquaresByColumn[activeSquareCol][i] + cols;
+        if (whiteSquaresByColumn[activeSquareCol][i] != activeSquare) {
+          highlitSquares.push(whiteSquaresByColumn[activeSquareCol][i]);
+        }
+        i = i + 1;
+      } while (
+        whiteSquaresByColumn[activeSquareCol][i] < stop + cols &&
+        whiteSquaresByColumn[activeSquareCol][i] == nextInSequence
+      );
+    }
+    console.log(highlitSquares, whiteSquaresByColumn[activeSquareCol]);
     this.setState({ highlitSquares: highlitSquares });
     return highlitSquares;
   };
@@ -184,7 +244,12 @@ class Grid extends Component {
         this.setState({ cursorDirection: cursorDirection });
       }
       this.setState({ puzzle: puzzle, clickedSquare: g, activeSquare: g });
-      this.setHighlitSquares(g);
+      if (this.state.cursorDirection == "across") {
+        this.setHighlitSquaresAcross(g);
+      } else {
+        this.setHighlitSquaresDown(g);
+      }
+
       this.ref.focus();
     }
   };
