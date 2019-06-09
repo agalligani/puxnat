@@ -43,33 +43,44 @@ class Grid extends Component {
     });
   };
 
-  handleKeyPress = event => {
-    console.log("e", event.nativeEvent.key);
+  handleKeyPress = async event => {
     let { puzzle, activeSquare } = this.state;
     let letter = "";
     switch (event.nativeEvent.key) {
       case "Backspace":
         this.setNextSquare("backwards");
+        // if (this.state.cursorDirection == "across") {
+        //   this.setHighlitSquaresAcross(activeSquare);
+        // } else {
+        //   this.setHighlitSquaresDown(activeSquare);
+        // }
         break;
       case "Tab":
-        break;
+        break; //make skip to next clue
+      case ".":
+        break; //make skip to next clue
       default:
         letter =
           event.nativeEvent.key == " "
             ? ""
             : event.nativeEvent.key.toUpperCase();
         puzzle.grid[activeSquare] = letter;
-        this.setState({ puzzle: puzzle });
-        this.setNextSquare();
+        await this.setState({ puzzle: puzzle });
+        await this.setNextSquare();
+      // if (this.state.cursorDirection == "across") {
+      //   this.setHighlitSquaresAcross(activeSquare);
+      // } else {
+      //   this.setHighlitSquaresDown(activeSquare);
+      // }
     }
   };
 
-  setNextSquare = (direction = "forwards") => {
+  setNextSquare = async (direction = "forwards") => {
     let { puzzle, activeSquare, cursorDirection } = this.state;
     let { cols, rows } = puzzle.size;
 
     cleanSquares = this.setCleanSquares();
-    this.setState({ whiteSquares: cleanSquares });
+    await this.setState({ whiteSquares: cleanSquares });
 
     if (cursorDirection == "across") {
       if (direction == "forwards") {
@@ -88,7 +99,6 @@ class Grid extends Component {
       let cleanSquaresByColumn = this.setCleanSquaresByColumn();
       let activeSquareRow = Math.ceil(activeSquare / cols);
       let activeSquareCol = cols - (activeSquareRow * cols - activeSquare);
-      console.log("---->", cleanSquaresByColumn, activeSquareCol);
       let activeSquarePosition = cleanSquaresByColumn[activeSquareCol].indexOf(
         activeSquare
       );
@@ -107,22 +117,25 @@ class Grid extends Component {
           prevColLength = cleanSquaresByColumn[activeSquareCol - 1].length;
           nextSquare =
             cleanSquaresByColumn[activeSquareCol - 1][prevColLength - 1];
-          console.log(activeSquareCol - 1, nextSquare);
         } else {
           nextSquare =
             cleanSquaresByColumn[activeSquareCol][activeSquarePosition - 1];
         }
       }
     }
+    if (this.state.cursorDirection == "across") {
+      await this.setHighlitSquaresAcross(nextSquare);
+    } else {
+      await this.setHighlitSquaresDown(nextSquare);
+    }
     if (puzzle.grid)
-      this.setState({
+      await this.setState({
         puzzle: puzzle,
-        clickedSquare: nextSquare,
         activeSquare: nextSquare
       });
   };
 
-  setHighlitSquaresAcross = g => {
+  setHighlitSquaresAcross = async g => {
     let activeSquare = g; // latency issue
     let { puzzle, cursorDirection } = this.state;
     let { rows, cols } = puzzle.size;
@@ -130,7 +143,6 @@ class Grid extends Component {
     let start = Math.floor(activeSquare / cols) * cols - 1;
     let stop = Math.ceil(activeSquare / cols) * cols;
     let middlePos = cleanSquares.indexOf(activeSquare);
-    console.log(activeSquare, middlePos, start, stop);
     if (middlePos == -1) {
       return;
     }
@@ -157,14 +169,12 @@ class Grid extends Component {
           highlitSquares.push(cleanSquares[i]);
         }
         i = i + 1;
-        console.log(i, cleanSquares[i]);
       } while (cleanSquares[i] < stop && cleanSquares[i] == nextInSequence);
     }
-    this.setState({ highlitSquares: highlitSquares });
-    return highlitSquares;
+    await this.setState({ highlitSquares: highlitSquares });
   };
 
-  setHighlitSquaresDown = g => {
+  setHighlitSquaresDown = async g => {
     let activeSquare = g; // latency issue
     let { rows, cols } = this.state.puzzle.size;
     cleanSquares = this.setCleanSquares();
@@ -172,24 +182,15 @@ class Grid extends Component {
     let whiteSquaresByColumn = this.setCleanSquaresByColumn();
     let activeSquareRow = Math.ceil(activeSquare / cols);
     let activeSquareCol = cols - (activeSquareRow * cols - activeSquare);
-    console.log("activeSquareCol", activeSquareCol);
     let start = activeSquareCol; //start is first square in col
     let stop = rows * cols - activeSquareCol;
-    console.log("stop", stop);
-    // console.log(
-    //   "---->",
-    //   whiteSquaresByColumn[activeSquareCol],
-    //   activeSquareCol
-    // );
     let middlePos = whiteSquaresByColumn[activeSquareCol].indexOf(activeSquare);
-    console.log("here", activeSquare, middlePos, start, stop);
     if (middlePos == -1) {
       return;
     }
     let highlitSquares = [];
     let nextInSequence =
       whiteSquaresByColumn[activeSquareCol][middlePos] - cols;
-    console.log("nextInSequence", nextInSequence, "start", start);
 
     if (activeSquare > start) {
       let i = middlePos;
@@ -220,9 +221,7 @@ class Grid extends Component {
         whiteSquaresByColumn[activeSquareCol][i] == nextInSequence
       );
     }
-    console.log(highlitSquares, whiteSquaresByColumn[activeSquareCol]);
-    this.setState({ highlitSquares: highlitSquares });
-    return highlitSquares;
+    await this.setState({ highlitSquares: highlitSquares });
   };
 
   _gridSquarePress = (g, l) => {
@@ -235,9 +234,9 @@ class Grid extends Component {
     }
   };
 
-  _puzzleClick = (puzzle, g, l) => {
+  _puzzleClick = async (puzzle, g, l) => {
     if (puzzle.grid[g] == ".") {
-      this.setState({
+      await this.setState({
         clickedSquare: null,
         activeSquare: null,
         highlitSquares: []
@@ -246,15 +245,18 @@ class Grid extends Component {
       if (g == this.state.activeSquare) {
         let cursorDirection =
           this.state.cursorDirection == "across" ? "down" : "across";
-        this.setState({ cursorDirection: cursorDirection });
+        await this.setState({ cursorDirection: cursorDirection });
       }
-      this.setState({ puzzle: puzzle, clickedSquare: g, activeSquare: g });
+      await this.setState({
+        puzzle: puzzle,
+        // clickedSquare: g,
+        activeSquare: g
+      });
       if (this.state.cursorDirection == "across") {
         this.setHighlitSquaresAcross(g);
       } else {
         this.setHighlitSquaresDown(g);
       }
-
       this.ref.focus();
     }
   };
@@ -302,7 +304,7 @@ class Grid extends Component {
       return (
         <Body>
           <Svg height={width} width={width}>
-            <Svg.G fill="white" stroke="green" stroke-width="5">
+            <Svg.G fill="white" stroke-width="5">
               {grid.map((sq, index) => {
                 let squareWidth = width / cols;
                 let height = squareWidth;
@@ -314,7 +316,7 @@ class Grid extends Component {
                 let gridNum = gridnums[index] == 0 ? null : gridnums[index];
                 let letter = sq;
                 let squareFill =
-                  index == this.state.activeSquare ? "#bacaff" : fill;
+                  index == this.state.activeSquare ? "#ffdd00" : fill;
                 squareFill =
                   this.state.highlitSquares.indexOf(index) > -1
                     ? "#fff155"
