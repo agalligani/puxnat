@@ -47,20 +47,25 @@ class Grid extends Component {
     console.log("e", event.nativeEvent.key);
     let { puzzle, activeSquare } = this.state;
     let letter = "";
-    if (event.nativeEvent.key == "Backspace") {
-      this.setNextSquare("backwards");
-    } else {
-      letter =
-        event.nativeEvent.key == " " ? "" : event.nativeEvent.key.toUpperCase();
-      puzzle.grid[activeSquare] = letter;
-      this.setState({ puzzle: puzzle });
-      this.setNextSquare();
+    switch (event.nativeEvent.key) {
+      case "Backspace":
+        this.setNextSquare("backwards");
+        break;
+      case "Tab":
+        break;
+      default:
+        letter =
+          event.nativeEvent.key == " "
+            ? ""
+            : event.nativeEvent.key.toUpperCase();
+        puzzle.grid[activeSquare] = letter;
+        this.setState({ puzzle: puzzle });
+        this.setNextSquare();
     }
   };
 
   setNextSquare = (direction = "forwards") => {
     let { puzzle, activeSquare, cursorDirection } = this.state;
-    let { grid } = puzzle;
     let { cols, rows } = puzzle.size;
 
     cleanSquares = this.setCleanSquares();
