@@ -49,16 +49,14 @@ class Grid extends Component {
     switch (event.nativeEvent.key) {
       case "Backspace":
         this.setNextSquare("backwards");
-        // if (this.state.cursorDirection == "across") {
-        //   this.setHighlitSquaresAcross(activeSquare);
-        // } else {
-        //   this.setHighlitSquaresDown(activeSquare);
-        // }
+        letter = "";
+        puzzle.grid[activeSquare] = letter;
+        await this.setState({ puzzle: puzzle });
         break;
       case "Tab":
         break; //make skip to next clue
       case ".":
-        break; //make skip to next clue
+        break;
       default:
         letter =
           event.nativeEvent.key == " "
@@ -67,11 +65,6 @@ class Grid extends Component {
         puzzle.grid[activeSquare] = letter;
         await this.setState({ puzzle: puzzle });
         await this.setNextSquare();
-      // if (this.state.cursorDirection == "across") {
-      //   this.setHighlitSquaresAcross(activeSquare);
-      // } else {
-      //   this.setHighlitSquaresDown(activeSquare);
-      // }
     }
   };
 
