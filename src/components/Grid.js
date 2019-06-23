@@ -5,6 +5,8 @@ import { StyleSheet, Dimensions, Alert } from "react-native";
 import { Container, Content, Body, Spinner } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
 import { squareClick } from "../utils/puzzle";
+// import { G, Rect, Text } from "react-native-svg";
+// import * as Svg from "react-native-svg";
 
 class Grid extends Component {
   state = {
@@ -371,7 +373,7 @@ class Grid extends Component {
             onKeyDown={this.handleKeyDown}
             autoCorrect={false}
             autoComplete={false}
-            autoCompleteType={false}
+            // autoCompleteType={cc-number}
             style={styles.textInput}
             className="textInput"
             ref={ref => (this.ref = ref)}

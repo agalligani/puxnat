@@ -6,7 +6,7 @@ const emptyGrid = (x, y) => {
   let gridBody = _.range(gridLength).map(() => {
     return "";
   });
-
+  //
   let gridNums = _.range(gridLength).map(() => {
     return 0;
   });
