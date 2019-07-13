@@ -1,14 +1,10 @@
 import React from "react";
-import { AsyncStorage, StyleSheet, Alert, ScrollView } from "react-native";
+import { AsyncStorage } from "react-native";
 import {
-  Header,
-  Left,
-  Button,
   Body,
   Container,
   Content,
   Right,
-  Title,
   Text,
   List,
   ListItem,

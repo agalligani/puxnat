@@ -1,7 +1,7 @@
 import React from "react";
-import { AsyncStorage, StyleSheet, Alert, TextInput } from "react-native";
+import { AsyncStorage, Alert } from "react-native";
 import prompt from "react-native-prompt-android";
-import Grid from "../components/Grid";
+import Grid from "../components/Grid/Grid";
 import {
   Body,
   Container,

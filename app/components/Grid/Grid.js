@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { Constants, Svg } from "expo";
 import _ from "lodash";
-import { StyleSheet, Dimensions, Alert } from "react-native";
-import { Container, Content, Body, Spinner } from "native-base";
+import { StyleSheet, Dimensions } from "react-native";
+import { Body, Spinner } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
-import { squareClick } from "../utils/puzzle";
+import { squareClick } from "../../utils/puzzle";
+import styles from "./style";
+
 // import { G, Rect, Text } from "react-native-svg";
 // import * as Svg from "react-native-svg";
 
@@ -390,21 +392,5 @@ class Grid extends Component {
     }
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: "#ecf0f1"
-  },
-  textInput: {
-    backgroundColor: "skyblue",
-    height: 20,
-    width: 200,
-    marginTop: 10
-  }
-});
 
 export default Grid;

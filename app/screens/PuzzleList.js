@@ -1,5 +1,5 @@
 import React from "react";
-import { AsyncStorage, Alert } from "react-native";
+import { AsyncStorage } from "react-native";
 import {
   Body,
   Container,

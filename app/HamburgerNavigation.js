@@ -1,7 +1,7 @@
 import { createAppContainer, createDrawerNavigator } from "react-navigation";
-import CreateGrid from "./views/CreateGrid";
-import GridList from "./views/GridList";
-import PuzzleList from "./views/PuzzleList";
+import CreateGrid from "./screens/CreateGrid";
+import GridList from "./screens/GridList";
+import PuzzleList from "./screens/PuzzleList";
 
 const HamburgerNavigation = createDrawerNavigator(
   {
