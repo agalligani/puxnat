@@ -1,12 +1,24 @@
-import React from "react";
-import { View, Text, StatusBar } from "react-native";
+import React, { Component } from "react";
+import { View, StatusBar, Button } from "react-native";
 import { Container } from "../components/Container";
+import { Logo } from "../components/Logo";
 
-export default () => (
-  <Container>
-    <StatusBar translucent={false} barStyle="light-content" />
-    <View>
-      <Text>PUXXLER</Text>
-    </View>
-  </Container>
-);
+class Home extends Component {
+  handleBuildPress = () => {
+    this.props.navigation.navigate("BuildMenu");
+  };
+
+  render() {
+    return (
+      <Container>
+        <StatusBar translucent={false} barStyle="light-content" />
+        <View>
+          <Logo />
+          <Button title={"Build Puzzles"} onPress={this.handleBuildPress} />
+        </View>
+      </Container>
+    );
+  }
+}
+
+export default Home;

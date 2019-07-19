@@ -1,16 +1,13 @@
 import React from "react";
 import Home from "./screens/Home";
 import EStyleSheet from "react-native-extended-stylesheet";
+import Navigator from "./config/routes";
+
+// import Routes from "./config/routes";
 
 EStyleSheet.build({
-  $primaryCharcoal: "#444555"
+  $primaryCharcoal: "#444555",
+  $white: "#FFFFFF"
 });
-// import HamburgerNavigation from "./HamburgerNavigation";
 
-// export default class App extends React.Component {
-//   render() {
-//     return <HamburgerNavigation />;
-//   }
-// }
-
-export default () => <Home />;
+export default () => <Navigator />;
