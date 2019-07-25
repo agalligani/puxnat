@@ -1,38 +1,14 @@
 import React from "react";
 import { AsyncStorage } from "react-native";
-import {
-  Body,
-  Container,
-  Content,
-  Text,
-  List,
-  ListItem,
-  Fab,
-  Icon
-} from "native-base";
+import { Body, Text, List, ListItem, Fab, Icon } from "native-base";
+import { SafeAreaView, StatusBar } from "react-native";
 
 export default class PuzzleList extends React.Component {
-  static navigationOptions = {
-    title: "Puzzles",
-    headerStyle: {
-      backgroundColor: "#ccc"
-    },
-    headerTitleStyle: {
-      color: "#fff",
-      fontSize: 20,
-      fontWeight: "600"
-    }
-  };
-
   state = { allPuzzles: [], clickedPuzzle: {}, savedPuzzles: [] };
-
-  _handleCreatePuzzlePress = g => {
-    console.log("OK");
-  };
 
   _handleEditPuzzlePress = p => {
     this.setState({ clickedPuzzle: { zygote: "b" } });
-    // console.log("p-list", p);
+    console.log("p-list", p);
     this.props.navigation.navigate("EditPuzzle", {
       currentGrid: p,
       puzzles: this.state.allPuzzles,
@@ -84,44 +60,28 @@ export default class PuzzleList extends React.Component {
 
   render() {
     return (
-      <Container>
-        <Content
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: "space-between"
-          }}
-        >
-          <List>
-            {this.state.allPuzzles.map(puzzle => {
-              if (puzzle !== null) {
-                return (
-                  <ListItem
-                    key={puzzle.id}
-                    onPress={this._handleEditPuzzlePress.bind(this, puzzle)}
-                  >
-                    <Body>
-                      <Text>
-                        {puzzle.name}
-                        {/* {grid.grid.size.cols}x{grid.grid.size.rows} */}
-                      </Text>
-                    </Body>
-                  </ListItem>
-                );
-              }
-            })}
-          </List>
-        </Content>
-        <Fab
-          active={false}
-          direction="up"
-          containerStyle={{}}
-          style={{ backgroundColor: "#5067ff" }}
-          position="bottomRight"
-          onPress={this._handleEditPuzzlePress.bind(this)}
-        >
-          <Icon name="add" />
-        </Fab>
-      </Container>
+      <SafeAreaView>
+        <StatusBar translucent={false} barStyle="dark-content" />
+        <List>
+          {this.state.allPuzzles.map(puzzle => {
+            if (puzzle !== null) {
+              return (
+                <ListItem
+                  key={puzzle.id}
+                  onPress={this._handleEditPuzzlePress.bind(this, puzzle)}
+                >
+                  <Body>
+                    <Text>
+                      {puzzle.name}
+                      {/* {grid.grid.size.cols}x{grid.grid.size.rows} */}
+                    </Text>
+                  </Body>
+                </ListItem>
+              );
+            }
+          })}
+        </List>
+      </SafeAreaView>
     );
   }
 }

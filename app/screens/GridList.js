@@ -11,6 +11,7 @@ import {
   Fab,
   Icon
 } from "native-base";
+import { SafeAreaView } from "react-native";
 import emptyGrid from "../utils/emptyGrid";
 
 export default class GridList extends React.Component {
@@ -101,12 +102,7 @@ export default class GridList extends React.Component {
   render() {
     return (
       <Container>
-        <Content
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: "space-between"
-          }}
-        >
+        <SafeAreaView>
           <List>
             {this.state.grids.map(grid => {
               if (grid !== null) {
@@ -134,7 +130,7 @@ export default class GridList extends React.Component {
               }
             })}
           </List>
-        </Content>
+        </SafeAreaView>
         <Fab
           active={false}
           direction="up"

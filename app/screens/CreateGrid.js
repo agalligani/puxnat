@@ -2,17 +2,8 @@ import React from "react";
 import { AsyncStorage, Alert } from "react-native";
 import prompt from "react-native-prompt-android";
 import Grid from "../components/Grid/Grid";
-import {
-  Body,
-  Container,
-  Content,
-  Button,
-  Text,
-  List,
-  ListItem,
-  Fab,
-  Icon
-} from "native-base";
+import { Container, Content, Fab, Icon } from "native-base";
+import { SafeAreaView, StatusBar } from "react-native";
 
 export default class CreateGrid extends React.Component {
   state = {
@@ -90,7 +81,6 @@ export default class CreateGrid extends React.Component {
     try {
       const allGrids = await AsyncStorage.getItem("allGrids");
       if (allGrids !== null) {
-        // We have data!!
         this.setState({
           allGrids: JSON.parse(allGrids)
         });
@@ -103,10 +93,9 @@ export default class CreateGrid extends React.Component {
 
   render() {
     return (
-      <Container>
-        <Content>
-          <Grid puzzle={this.state.currentGrid} action={this.state.action} />
-        </Content>
+      <SafeAreaView>
+        <StatusBar />
+        <Grid puzzle={this.state.currentGrid} action={this.state.action} />
         <Fab
           active={false}
           style={{ backgroundColor: "#5067ff" }}
@@ -123,7 +112,7 @@ export default class CreateGrid extends React.Component {
         >
           <Icon name="keypad" />
         </Fab>
-      </Container>
+      </SafeAreaView>
     );
   }
 }

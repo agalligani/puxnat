@@ -3,6 +3,7 @@ import { AsyncStorage, Alert } from "react-native";
 import Grid from "../components/Grid/Grid";
 import prompt from "react-native-prompt-android";
 import { Container, Content, Fab, Icon } from "native-base";
+import { SafeAreaView, StatusBar, Button } from "react-native";
 
 export default class CreatePuzzle extends React.Component {
   state = {
@@ -99,41 +100,17 @@ export default class CreatePuzzle extends React.Component {
 
   render() {
     return (
-      <Container>
-        <Content>
-          {
-            <Grid
-              key=""
-              puzzle={this.state.currentPuzzle}
-              action={this.state.action}
-            />
-          }
-        </Content>
-        <Fab
-          active={false}
-          style={{ backgroundColor: "#5067ff" }}
-          position="bottomRight"
-          onPress={this._handleSavePress.bind(this)}
-        >
-          <Icon name="save" />
-        </Fab>
-        <Fab
-          active={false}
-          style={{ backgroundColor: "#5067ff" }}
-          position="bottomLeft"
-          containerStyle={{ left: "45%" }}
-          onPress={this._openPuzzleList.bind(this)}
-        >
-          <Icon name="keypad" />
-        </Fab>
-        <Fab
-          active={false}
-          style={{ backgroundColor: "#5067ff" }}
-          position="bottomLeft"
-        >
-          <Icon name="keypad" />
-        </Fab>
-      </Container>
+      <SafeAreaView style={{ flex: 1 }}>
+        {
+          <Grid
+            key=""
+            puzzle={this.state.currentPuzzle}
+            action={this.state.action}
+          />
+        }
+        <Button title="Save" onPress={this._handleSavePress.bind(this)} />
+        <Button title="Return" onPress={this._openPuzzleList.bind(this)} />
+      </SafeAreaView>
     );
   }
 }

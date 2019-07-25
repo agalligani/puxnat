@@ -5,32 +5,44 @@ import CreatePuzzle from "../screens/CreatePuzzle";
 import CreateGrid from "../screens/CreateGrid";
 import GridList from "../screens/GridList";
 import PuzzleList from "../screens/PuzzleList";
-import { BuildMenu, ChooseAGrid } from "../components/Modals";
+import { BuildMenu, ChooseAGrid } from "../modals";
 
-const MainStack = createStackNavigator({
-  Home: {
-    screen: Home,
-    navigationOptions: {
-      header: () => null
+const MainStack = createStackNavigator(
+  {
+    Home: {
+      screen: Home,
+      navigationOptions: {
+        header: () => null
+      }
+    },
+    CreatePuzzle: {
+      screen: CreatePuzzle,
+      navigationOptions: {}
+    },
+    EditPuzzle: {
+      screen: CreatePuzzle,
+      navigationOptions: {}
+    },
+    CreateGrid: {
+      screen: CreateGrid,
+      navigationOptions: {}
+    },
+    GridList: {
+      screen: GridList,
+      navigationOptions: {
+        header: () => "Grid List"
+      }
+    },
+    PuzzleList: {
+      screen: PuzzleList,
+      navigationOptions: {}
     }
   },
-  CreatePuzzle: {
-    screen: CreatePuzzle,
-    navigationOptions: {}
-  },
-  CreateGrid: {
-    screen: CreateGrid,
-    navigationOptions: {}
-  },
-  GridList: {
-    screen: GridList,
-    navigationOptions: {}
-  },
-  PuzzleList: {
-    screen: CreateGrid,
-    navigationOptions: {}
+  {
+    mode: "modal",
+    headerMode: "none"
   }
-});
+);
 
 const RootStack = createStackNavigator(
   {
