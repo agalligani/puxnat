@@ -1,7 +1,7 @@
 import React from "react";
 import { AsyncStorage } from "react-native";
 import { Body, Text, List, ListItem, Fab, Icon } from "native-base";
-import { SafeAreaView, StatusBar } from "react-native";
+import { SafeAreaView, StatusBar, Button } from "react-native";
 
 export default class PuzzleList extends React.Component {
   state = { allPuzzles: [], clickedPuzzle: {}, savedPuzzles: [] };
@@ -60,7 +60,7 @@ export default class PuzzleList extends React.Component {
 
   render() {
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
         <StatusBar translucent={false} barStyle="dark-content" />
         <List>
           {this.state.allPuzzles.map(puzzle => {
@@ -81,6 +81,10 @@ export default class PuzzleList extends React.Component {
             }
           })}
         </List>
+        <Button
+          onPress={() => this.props.navigation.navigate("Home")}
+          title="Return"
+        />
       </SafeAreaView>
     );
   }

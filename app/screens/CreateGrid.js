@@ -2,8 +2,7 @@ import React from "react";
 import { AsyncStorage, Alert } from "react-native";
 import prompt from "react-native-prompt-android";
 import Grid from "../components/Grid/Grid";
-import { Container, Content, Fab, Icon } from "native-base";
-import { SafeAreaView, StatusBar } from "react-native";
+import { SafeAreaView, StatusBar, Button } from "react-native";
 
 export default class CreateGrid extends React.Component {
   state = {
@@ -70,6 +69,10 @@ export default class CreateGrid extends React.Component {
     });
   };
 
+  _openGridList = _ => {
+    this.props.navigation.navigate("GridList", {});
+  };
+
   componentWillMount = async _ => {
     if (this.props.navigation.state.params.clickedGrid) {
       let newGrid = this.props.navigation.state.params.clickedGrid.grid;
@@ -93,25 +96,22 @@ export default class CreateGrid extends React.Component {
 
   render() {
     return (
-      <SafeAreaView>
-        <StatusBar />
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar translucent={false} barStyle="dark-content" />
         <Grid puzzle={this.state.currentGrid} action={this.state.action} />
-        <Fab
-          active={false}
-          style={{ backgroundColor: "#5067ff" }}
-          position="bottomRight"
+        <Button
+          title="Save Changes to Grid"
           onPress={this._handleCreateGridPress.bind(this)}
-        >
-          <Icon name="save" />
-        </Fab>
-        <Fab
-          active={false}
-          style={{ backgroundColor: "#5067ff" }}
-          position="bottomLeft"
+        />
+        <Button
+          title="Create Puzzle Using Grid"
           onPress={this._handleCreatePuzzlePress.bind(this)}
-        >
-          <Icon name="keypad" />
-        </Fab>
+        />
+        <Button
+          title="Show Grid List"
+          onPress={this._openGridList.bind(this)}
+        />
+        <Button onPress={() => this.props.navigation.goBack()} title="Cancel" />
       </SafeAreaView>
     );
   }

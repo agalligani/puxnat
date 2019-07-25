@@ -101,6 +101,7 @@ export default class CreatePuzzle extends React.Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar translucent={false} barStyle="dark-content" />
         {
           <Grid
             key=""

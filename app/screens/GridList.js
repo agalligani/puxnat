@@ -1,17 +1,7 @@
 import React from "react";
 import { AsyncStorage } from "react-native";
-import {
-  Body,
-  Container,
-  Content,
-  Right,
-  Text,
-  List,
-  ListItem,
-  Fab,
-  Icon
-} from "native-base";
-import { SafeAreaView } from "react-native";
+import { Body, Right, Text, List, ListItem, Fab, Icon } from "native-base";
+import { SafeAreaView, StatusBar, Button } from "react-native";
 import emptyGrid from "../utils/emptyGrid";
 
 export default class GridList extends React.Component {
@@ -61,7 +51,6 @@ export default class GridList extends React.Component {
             grid: grid
           })
         });
-        console.log(this.state.grids);
         await AsyncStorage.setItem(
           "allGrids",
           JSON.stringify(this.state.grids)
@@ -101,47 +90,40 @@ export default class GridList extends React.Component {
 
   render() {
     return (
-      <Container>
-        <SafeAreaView>
-          <List>
-            {this.state.grids.map(grid => {
-              if (grid !== null) {
-                return (
-                  <ListItem
-                    key={grid.id}
-                    onPress={this._handleEditGridPress.bind(this, grid)}
-                  >
-                    <Body>
-                      <Text>
-                        {grid.name}
-                        {/* {grid.grid.size.cols}x{grid.grid.size.rows} */}
-                      </Text>
-                    </Body>
-                    <Right>
-                      <Icon
-                        ios="ios-remove-circle"
-                        android="md-remove-circle"
-                        style={{ color: "red" }}
-                        onPress={this._removeGrid.bind(this, grid)}
-                      />
-                    </Right>
-                  </ListItem>
-                );
-              }
-            })}
-          </List>
-        </SafeAreaView>
-        <Fab
-          active={false}
-          direction="up"
-          containerStyle={{}}
-          style={{ backgroundColor: "#5067ff" }}
-          position="bottomRight"
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar translucent={false} barStyle="dark-content" />
+        <List>
+          {this.state.grids.map(grid => {
+            if (grid !== null) {
+              return (
+                <ListItem
+                  key={grid.id}
+                  onPress={this._handleEditGridPress.bind(this, grid)}
+                >
+                  <Body>
+                    <Text>
+                      {grid.name}
+                      {/* {grid.grid.size.cols}x{grid.grid.size.rows} */}
+                    </Text>
+                  </Body>
+                  <Right>
+                    <Icon
+                      ios="ios-remove-circle"
+                      android="md-remove-circle"
+                      style={{ color: "red" }}
+                      onPress={this._removeGrid.bind(this, grid)}
+                    />
+                  </Right>
+                </ListItem>
+              );
+            }
+          })}
+        </List>
+        <Button
+          title="Create New Grid"
           onPress={this._handleCreateGridPress.bind(this)}
-        >
-          <Icon name="add" />
-        </Fab>
-      </Container>
+        />
+      </SafeAreaView>
     );
   }
 }
