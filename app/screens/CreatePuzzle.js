@@ -2,7 +2,6 @@ import React from "react";
 import { AsyncStorage, Alert } from "react-native";
 import Grid from "../components/Grid/Grid";
 import prompt from "react-native-prompt-android";
-import { Container, Content, Fab, Icon } from "native-base";
 import { SafeAreaView, StatusBar, Button } from "react-native";
 
 export default class CreatePuzzle extends React.Component {

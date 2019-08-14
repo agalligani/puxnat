@@ -1,14 +1,12 @@
 import React from "react";
 import { AsyncStorage } from "react-native";
-import { Body, Text, List, ListItem, Fab, Icon } from "native-base";
+import { Body, Text, List, ListItem } from "native-base";
 import { SafeAreaView, StatusBar, Button } from "react-native";
 
 export default class PuzzleList extends React.Component {
   state = { allPuzzles: [], clickedPuzzle: {}, savedPuzzles: [] };
 
   _handleEditPuzzlePress = p => {
-    this.setState({ clickedPuzzle: { zygote: "b" } });
-    console.log("p-list", p);
     this.props.navigation.navigate("EditPuzzle", {
       currentGrid: p,
       puzzles: this.state.allPuzzles,

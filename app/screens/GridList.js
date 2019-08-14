@@ -1,6 +1,6 @@
 import React from "react";
 import { AsyncStorage } from "react-native";
-import { Body, Right, Text, List, ListItem, Fab, Icon } from "native-base";
+import { Body, Right, Text, List, ListItem, Icon } from "native-base";
 import { SafeAreaView, StatusBar, Button } from "react-native";
 import emptyGrid from "../utils/emptyGrid";
 
@@ -123,6 +123,7 @@ export default class GridList extends React.Component {
           title="Create New Grid"
           onPress={this._handleCreateGridPress.bind(this)}
         />
+        <Button title="Cancel" onPress={() => this.props.navigation.goBack()} />
       </SafeAreaView>
     );
   }

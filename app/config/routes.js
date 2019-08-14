@@ -1,3 +1,4 @@
+import React from "react";
 import Home from "../screens/Home";
 import { StatusBar, View, Text, Button } from "react-native";
 import { createAppContainer, createStackNavigator } from "react-navigation";
@@ -25,12 +26,14 @@ const MainStack = createStackNavigator(
     },
     CreateGrid: {
       screen: CreateGrid,
-      navigationOptions: {}
+      navigationOptions: {
+        header: () => null
+      }
     },
     GridList: {
       screen: GridList,
       navigationOptions: {
-        header: () => "Grid List"
+        header: () => <Text>Grid List</Text>
       }
     },
     PuzzleList: {
