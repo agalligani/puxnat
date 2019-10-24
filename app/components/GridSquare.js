@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Constants, Svg } from "expo";
+import { Svg } from "react-native-svg";
 
 export default class GridSquare extends Component {
   state = {

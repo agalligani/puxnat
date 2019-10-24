@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import { Constants, Svg } from "expo";
+import { Constants } from "expo";
 import _ from "lodash";
 import { StyleSheet, Dimensions } from "react-native";
 import { Body, Spinner } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
 import { squareClick } from "../../utils/puzzle";
 import styles from "./style";
-
-// import { G, Rect, Text } from "react-native-svg";
+import * as Svg from "react-native-svg";
 // import * as Svg from "react-native-svg";
 
 class Grid extends Component {
