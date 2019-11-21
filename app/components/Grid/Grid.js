@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Constants } from "expo";
+// import { Constants } from "expo";
 import _ from "lodash";
 import { StyleSheet, Dimensions } from "react-native";
 import { Body, Spinner } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
-import { squareClick } from "../../utils/puzzle";
+// import { squareClick } from "../../utils/puzzle";
 import styles from "./style";
 import * as Svg from "react-native-svg";
 // import * as Svg from "react-native-svg";
@@ -299,7 +299,7 @@ class Grid extends Component {
       width = width - 32;
       return (
         <Body>
-          <Svg height={width} width={width}>
+          <Svg.Svg height={width} width={width}>
             <Svg.G fill="white" stroke-width="5">
               {grid.map((sq, index) => {
                 let squareWidth = width / cols;
@@ -368,7 +368,7 @@ class Grid extends Component {
                 );
               })}
             </Svg.G>
-          </Svg>
+          </Svg.Svg>
           <TextInput
             onKeyPress={this.handleKeyPress}
             onKeyDown={this.handleKeyDown}
