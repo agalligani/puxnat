@@ -7,7 +7,6 @@ import { TextInput } from "react-native-gesture-handler";
 // import { squareClick } from "../../utils/puzzle";
 import styles from "./style";
 import * as Svg from "react-native-svg";
-// import * as Svg from "react-native-svg";
 
 class Grid extends Component {
   state = {

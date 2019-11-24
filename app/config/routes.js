@@ -5,6 +5,7 @@ import { createAppContainer, createStackNavigator } from "react-navigation";
 import CreatePuzzle from "../screens/CreatePuzzle";
 import CreateGrid from "../screens/CreateGrid";
 import GridList from "../screens/GridList";
+import PuzzlesEdit from "../screens/PuzzlesEdit";
 import PuzzleList from "../screens/PuzzleList";
 import { BuildMenu, ChooseAGrid } from "../modals";
 
@@ -19,6 +20,12 @@ const MainStack = createStackNavigator(
     CreatePuzzle: {
       screen: CreatePuzzle,
       navigationOptions: {}
+    },
+    PuzzlesEdit: {
+      screen: PuzzlesEdit,
+      navigationOptions: {
+        header: () => <Text>Grid List</Text>
+      }
     },
     EditPuzzle: {
       screen: CreatePuzzle,

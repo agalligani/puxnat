@@ -102,8 +102,8 @@ export default class GridList extends React.Component {
                 >
                   <Body>
                     <Text>
-                      {grid.name}
-                      {/* {grid.grid.size.cols}x{grid.grid.size.rows} */}
+                      {/* {grid.name} */}
+                      {grid.grid.size.cols}x{grid.grid.size.rows}
                     </Text>
                   </Body>
                   <Right>

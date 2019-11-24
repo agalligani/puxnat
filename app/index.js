@@ -1,12 +1,15 @@
 import React from "react";
-import Home from "./screens/Home";
 import EStyleSheet from "react-native-extended-stylesheet";
 import Navigator from "./config/routes";
-import { ChooseAGrid } from "./modals";
 
 EStyleSheet.build({
-  $primaryCharcoal: "#444555",
-  $white: "#FFFFFF"
+  $primaryCharcoal: "#90b6ca",
+  $white: "#FFFFFF",
+  $blue: "#0d7fb5",
+  $lightGrey: "#F1F1F5",
+  $slate: "#8d9ca3",
+  $grey: "#818997",
+  $lightBlue: "#90b6ca"
 });
 
 export default () => <Navigator />;

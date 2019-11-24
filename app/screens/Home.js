@@ -5,7 +5,8 @@ import { Logo } from "../components/Logo";
 
 class Home extends Component {
   handleBuildPress = () => {
-    this.props.navigation.navigate("BuildMenu");
+    // this.props.navigation.navigate("BuildMenu");
+    this.props.navigation.navigate("PuzzlesEdit");
   };
 
   render() {
