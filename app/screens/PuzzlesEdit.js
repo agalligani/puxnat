@@ -14,22 +14,20 @@ import {
   Text,
   Title
 } from "native-base";
-import PuzzleList from "./PuzzleList";
+import PuzzleList from "../components/PuzzleList";
 
 import { SafeAreaView, StatusBar } from "react-native";
 import emptyGrid from "../utils/emptyGrid";
 
-class TabsTest extends React.Component {
+class PuzzlesEdit extends React.Component {
   render() {
+    const { navigation } = this.props;
     return (
       <Container>
         <StatusBar translucent={false} barStyle="dark-content" />
         <Header>
           <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate("Home")}
-            >
+            <Button transparent onPress={() => navigation.navigate("Home")}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
@@ -51,25 +49,16 @@ class TabsTest extends React.Component {
               </TabHeading>
             }
           >
-            <PuzzleList />
+            <PuzzleList navigation={navigation} />
           </Tab>
           <Tab
             heading={
               <TabHeading>
-                <Text>No Icon</Text>
+                <Text>Completed</Text>
               </TabHeading>
             }
           >
-            <PuzzleList />
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading>
-                <Icon name="apps" />
-              </TabHeading>
-            }
-          >
-            <PuzzleList />
+            <PuzzleList navigation={navigation} />
           </Tab>
         </Tabs>
       </Container>
@@ -77,4 +66,4 @@ class TabsTest extends React.Component {
   }
 }
 
-export default TabsTest;
+export default PuzzlesEdit;
