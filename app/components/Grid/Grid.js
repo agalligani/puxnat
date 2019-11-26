@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-// import { Constants } from "expo";
 import _ from "lodash";
-import { StyleSheet, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
 import { Body, Spinner } from "native-base";
 import { TextInput } from "react-native-gesture-handler";
-// import { squareClick } from "../../utils/puzzle";
-import styles from "./style";
+import styles from "./styles";
 import * as Svg from "react-native-svg";
 
 class Grid extends Component {
@@ -295,7 +293,11 @@ class Grid extends Component {
       let { width, height } = Dimensions.get("window");
       let action = this.state.action;
       // Adjust for container
-      width = width - 32;
+      if (action == "thumbnail") {
+        width = 80;
+      } else {
+        width = width - 40;
+      }
       return (
         <Body>
           <Svg.Svg height={width} width={width}>
@@ -368,11 +370,14 @@ class Grid extends Component {
               })}
             </Svg.G>
           </Svg.Svg>
+          {/* This Text Input is necessary to control keyboard 
+          behavior and should be hidden from user */}
           <TextInput
             onKeyPress={this.handleKeyPress}
             onKeyDown={this.handleKeyDown}
             autoCorrect={false}
             autoComplete={false}
+            clearTextOnFocus={true}
             // autoCompleteType={cc-number}
             style={styles.textInput}
             className="textInput"

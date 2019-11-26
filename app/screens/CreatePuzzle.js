@@ -1,8 +1,13 @@
 import React from "react";
-import { AsyncStorage, Alert } from "react-native";
+import {
+  SafeAreaView,
+  StatusBar,
+  AsyncStorage,
+  Alert,
+  Button
+} from "react-native";
 import Grid from "../components/Grid/Grid";
 import prompt from "react-native-prompt-android";
-import { SafeAreaView, StatusBar, Button } from "react-native";
 
 export default class CreatePuzzle extends React.Component {
   state = {
@@ -92,7 +97,7 @@ export default class CreatePuzzle extends React.Component {
   componentDidMount = _ => {};
 
   _openPuzzleList = _ => {
-    this.props.navigation.navigate("PuzzleList", {
+    this.props.navigation.navigate("PuzzlesEdit", {
       savePuzzleById: async grid => {}
     });
   };
@@ -109,7 +114,6 @@ export default class CreatePuzzle extends React.Component {
           />
         }
         <Button title="Save" onPress={this._handleSavePress.bind(this)} />
-        <Button title="Return" onPress={this._openPuzzleList.bind(this)} />
       </SafeAreaView>
     );
   }

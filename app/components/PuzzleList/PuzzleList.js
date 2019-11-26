@@ -1,14 +1,29 @@
 import React from "react";
 import { AsyncStorage } from "react-native";
-import { Body, Text, List, ListItem } from "native-base";
-import { SafeAreaView, StatusBar } from "react-native";
+import {
+  Container,
+  Header,
+  Separator,
+  Content,
+  List,
+  ListItem,
+  Thumbnail,
+  Text,
+  Left,
+  Body,
+  Right,
+  Button
+} from "native-base";
+import { GridThumbnail } from "../GridThumbnail";
 
 export default class PuzzleList extends React.Component {
   state = { allPuzzles: [], clickedPuzzle: {}, savedPuzzles: [] };
 
   _handleEditPuzzlePress = p => {
-    this.props.navigation.navigate("EditPuzzle", {
+    this.props.navigation.navigate("PuzzleFill", {
       currentGrid: p,
+      newPuzzle: false,
+      puzzleView: "Grid",
       puzzles: this.state.allPuzzles,
       savePuzzleById: async puzzle => {
         await this._removePuzzle(puzzle);
@@ -58,29 +73,46 @@ export default class PuzzleList extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar translucent={false} barStyle="dark-content" />
-        <List>
-          {this.state.allPuzzles.map(puzzle => {
-            if (puzzle !== null) {
-              return (
-                <ListItem
-                  key={puzzle.id}
-                  onPress={this._handleEditPuzzlePress.bind(this, puzzle)}
-                >
-                  <Body>
-                    <Text>
-                      {/* {puzzle.puzzle.size.rows} */}
-                      {puzzle.puzzle.grid}
-                      {/* {grid.grid.size.cols}x{grid.grid.size.rows} */}
-                    </Text>
-                  </Body>
-                </ListItem>
-              );
-            }
-          })}
-        </List>
-      </SafeAreaView>
+      <Container>
+        <Content>
+          <Separator bordered>
+            <Text>15x15</Text>
+          </Separator>
+          <List>
+            {this.state.allPuzzles.map(puzzle => {
+              if (puzzle !== null) {
+                return (
+                  <ListItem
+                    thumbnail
+                    large
+                    key={puzzle.id}
+                    onPress={this._handleEditPuzzlePress.bind(this, puzzle)}
+                  >
+                    <Left>
+                      <GridThumbnail puzzle={puzzle.puzzle} />
+                    </Left>
+                    <Body>
+                      <Text>
+                        {puzzle.puzzle.size.cols}x{puzzle.puzzle.size.rows}
+                        {/* {puzzle.puzzle.grid} */}
+                        {/* {grid.grid.size.cols}x{grid.grid.size.rows} */}
+                      </Text>
+                      <Text note numberOfLines={1}>
+                        Important puzzle info....
+                      </Text>
+                    </Body>
+                    <Right>
+                      <Button transparent>
+                        <Text>View</Text>
+                      </Button>
+                    </Right>
+                  </ListItem>
+                );
+              }
+            })}
+          </List>
+        </Content>
+      </Container>
     );
   }
 }

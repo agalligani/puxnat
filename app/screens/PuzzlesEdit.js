@@ -5,7 +5,6 @@ import {
   Body,
   Button,
   Right,
-  View,
   Left,
   Tab,
   Tabs,
@@ -14,10 +13,8 @@ import {
   Text,
   Title
 } from "native-base";
-import PuzzleList from "../components/PuzzleList";
-
+import { PuzzleList } from "../components/PuzzleList";
 import { SafeAreaView, StatusBar } from "react-native";
-import emptyGrid from "../utils/emptyGrid";
 
 class PuzzlesEdit extends React.Component {
   render() {
@@ -35,8 +32,8 @@ class PuzzlesEdit extends React.Component {
             <Title>Puzzles</Title>
           </Body>
           <Right>
-            <Button transparent>
-              <Icon name="menu" />
+            <Button transparent onPress={() => navigation.navigate("GridList")}>
+              <Icon name="ios-add" />
             </Button>
           </Right>
         </Header>
@@ -44,7 +41,6 @@ class PuzzlesEdit extends React.Component {
           <Tab
             heading={
               <TabHeading>
-                {/* <Icon name="camera" /> */}
                 <Text>In Progress</Text>
               </TabHeading>
             }
