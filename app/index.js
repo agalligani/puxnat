@@ -9,7 +9,9 @@ EStyleSheet.build({
   $lightGrey: "#F1F1F5",
   $slate: "#8d9ca3",
   $grey: "#818997",
-  $lightBlue: "#90b6ca"
+  $lightBlue: "#90b6ca",
+
+  $h1white: { color: "$white", fontSize: 100 }
 });
 
 export default () => <Navigator />;

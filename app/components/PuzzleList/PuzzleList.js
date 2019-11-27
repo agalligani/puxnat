@@ -1,23 +1,36 @@
 import React from "react";
-import { AsyncStorage } from "react-native";
 import {
-  Container,
-  Header,
-  Separator,
-  Content,
-  List,
-  ListItem,
-  Thumbnail,
+  View,
+  AsyncStorage,
+  ScrollView,
+  Image,
   Text,
-  Left,
-  Body,
-  Right,
-  Button
-} from "native-base";
+  TouchableOpacity
+} from "react-native";
+
+import { H1, H2, H3 } from "native-base";
+
+import styles from "./styles";
+
 import { GridThumbnail } from "../GridThumbnail";
 
 export default class PuzzleList extends React.Component {
   state = { allPuzzles: [], clickedPuzzle: {}, savedPuzzles: [] };
+
+  componentWillMount = async () => {
+    try {
+      const savedPuzzles = await AsyncStorage.getItem("allPuzzles");
+      if (savedPuzzles !== null) {
+        this.setState({
+          allPuzzles: JSON.parse(savedPuzzles)
+        });
+      } else {
+        console.log("no data");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   _handleEditPuzzlePress = p => {
     this.props.navigation.navigate("PuzzleFill", {
@@ -56,63 +69,32 @@ export default class PuzzleList extends React.Component {
     }
   };
 
-  componentWillMount = async () => {
-    try {
-      const savedPuzzles = await AsyncStorage.getItem("allPuzzles");
-      if (savedPuzzles !== null) {
-        this.setState({
-          allPuzzles: JSON.parse(savedPuzzles)
-        });
-      } else {
-        console.log("no data");
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   render() {
     return (
-      <Container>
-        <Content>
-          <Separator bordered>
-            <Text>15x15</Text>
-          </Separator>
-          <List>
-            {this.state.allPuzzles.map(puzzle => {
-              if (puzzle !== null) {
-                return (
-                  <ListItem
-                    thumbnail
-                    large
-                    key={puzzle.id}
-                    onPress={this._handleEditPuzzlePress.bind(this, puzzle)}
-                  >
-                    <Left>
-                      <GridThumbnail puzzle={puzzle.puzzle} />
-                    </Left>
-                    <Body>
-                      <Text>
-                        {puzzle.puzzle.size.cols}x{puzzle.puzzle.size.rows}
-                        {/* {puzzle.puzzle.grid} */}
-                        {/* {grid.grid.size.cols}x{grid.grid.size.rows} */}
-                      </Text>
-                      <Text note numberOfLines={1}>
-                        Important puzzle info....
-                      </Text>
-                    </Body>
-                    <Right>
-                      <Button transparent>
-                        <Text>View</Text>
-                      </Button>
-                    </Right>
-                  </ListItem>
-                );
-              }
-            })}
-          </List>
-        </Content>
-      </Container>
+      <ScrollView contentContainerStyle={styles.listContainer}>
+        {this.state.allPuzzles.map(puzzle => {
+          if (puzzle !== null) {
+            return (
+              <TouchableOpacity
+                key={puzzle.id}
+                key={puzzle.id}
+                onPress={this._handleEditPuzzlePress.bind(this, puzzle)}
+                style={styles.touchable}
+              >
+                <GridThumbnail puzzle={puzzle.puzzle} />
+                <View style={styles.textContainer}>
+                  <Text style={styles.largeText}>
+                    {puzzle.puzzle.size.cols}x{puzzle.puzzle.size.rows}
+                  </Text>
+                  <Text style={styles.normalText}>
+                    Important puzzle info....
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }
+        })}
+      </ScrollView>
     );
   }
 }

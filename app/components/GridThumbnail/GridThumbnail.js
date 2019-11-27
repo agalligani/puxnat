@@ -48,8 +48,8 @@ class GridThumbnail extends Component {
                   y={squareWidth * 0.8}
                   font-family={"Verdana"}
                   fontSize="8"
-                  stroke="grey"
-                  fill="grey"
+                  stroke="#0d7fb5"
+                  fill="#0d7fb5"
                   strokeWidth=".5"
                   id={"letter" + index}
                 >
@@ -65,7 +65,7 @@ class GridThumbnail extends Component {
                     width={squareWidth}
                     height={squareWidth}
                     strokeWidth={1}
-                    stroke="#222222"
+                    stroke="#444444"
                     fill={squareFill}
                   />
                   {letter}
