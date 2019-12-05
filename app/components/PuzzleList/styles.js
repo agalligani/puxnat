@@ -3,34 +3,37 @@ import EStyleSheet from "react-native-extended-stylesheet";
 export default EStyleSheet.create({
   listContainer: {
     alignItems: "center",
-    justifyContent: "center"
-    // backgroundColor: "$blue"
+    justifyContent: "flex-start",
+    width: "100%",
+    backgroundColor: "$white"
   },
   touchable: {
-    alignItems: "center",
-    color: "$white",
-    justifyContent: "center",
+    backgroundColor: "$white",
+    margin: 12,
+    width: "100%",
+    flexDirection: "row"
     // backgroundColor: "$grey",
     // borderColor: "$lightGrey",
     // borderWidth: 3,
-    marginTop: 25,
-    padding: 12
   },
+  puzzleView: {
+    flex: 40
+  },
+  puzzle: {},
   textContainer: {
-    alignItems: "center",
+    flex: 60,
     color: "$white",
-    justifyContent: "center",
-    backgroundColor: "$lightGrey",
-    // borderColor: "$lightGrey",
-    marginTop: 6,
-    padding: 6
+    backgroundColor: "$lightMustard",
+    padding: 10
   },
   largeText: {
     fontSize: 30,
-    color: "$grey"
+    color: "$white",
+    fontWeight: "bold"
   },
   normalText: {
     fontSize: 18,
-    color: "$blue"
+    textAlign: "center",
+    color: "$grey"
   }
 });

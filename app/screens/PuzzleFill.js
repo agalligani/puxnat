@@ -29,6 +29,30 @@ class PuzzleFill extends React.Component {
     this.setState({ activeFooterTab: tab });
   };
 
+  gridCluesToggleFunction = props => {
+    if (this.state.activeFooterTab == 0) {
+      return (
+        <Content>
+          {/* CreatePuzzle should probably be renamed FillPuzzleGrid */}
+          {/* Also passing props doesn't make sense... should only pass current puzzle */}
+          {/* See {Object.keys(props.navigation.state.params.puzzles).join(",")} */}
+
+          <CreatePuzzle {...props} />
+        </Content>
+      );
+    } else {
+      return (
+        <Content>
+          {/* CreatePuzzle should probably be renamed FillPuzzleGrid */}
+          <Text>
+            {/* {Object.keys(props.navigation.state.params.puzzles).join(",")} */}
+            {Object.keys(props.navigation.state.params).join(",")}
+          </Text>
+        </Content>
+      );
+    }
+  };
+
   render() {
     const { navigation } = this.props;
     const { puzzleView } = this.props.navigation.state.params;
@@ -36,7 +60,7 @@ class PuzzleFill extends React.Component {
     return (
       <Container>
         <StatusBar translucent={false} barStyle="dark-content" />
-        <Header>
+        {/* <Header>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
@@ -50,10 +74,9 @@ class PuzzleFill extends React.Component {
               <Icon name="ios-save" />
             </Button>
           </Right>
-        </Header>
-        <Content>
-          <CreatePuzzle {...this.props} />
-        </Content>
+        </Header> */}
+        {this.gridCluesToggleFunction(this.props)}
+
         <Footer>
           <FooterTab>
             <Button

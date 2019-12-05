@@ -30,9 +30,20 @@ export default class CreatePuzzle extends React.Component {
       "allPuzzles",
       JSON.stringify(this.state.allPuzzles)
     );
+    console.log(puzzle.answers);
+  };
+
+  buildAcrossAnswers = p => {
+    acrossAnswers = p.grid
+      .map(sq => (sq = sq == "" ? " " : sq))
+      .join()
+      .replace(/,/g, "")
+      .split(".");
+    console.log("grid", acrossAnswers);
   };
 
   _handleSavePress = _ => {
+    const acrossAnswers = this.buildAcrossAnswers(this.state.currentPuzzle);
     if (this.state.currentPuzzle.id === null) {
       prompt(
         "Enter Puzzle Name",
@@ -102,6 +113,10 @@ export default class CreatePuzzle extends React.Component {
     });
   };
 
+  _returnHome = _ => {
+    this.props.navigation.navigate("Home", {});
+  };
+
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -114,6 +129,7 @@ export default class CreatePuzzle extends React.Component {
           />
         }
         <Button title="Save" onPress={this._handleSavePress.bind(this)} />
+        <Button title="Return" onPress={this._returnHome.bind(this)} />
       </SafeAreaView>
     );
   }

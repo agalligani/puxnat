@@ -38,7 +38,7 @@ class GridThumbnail extends Component {
               let posx = x * squareWidth;
               let y = Math.floor(index / cols);
               let posy = y * height;
-              let fill = sq === "." ? "#111111" : "#ffffff";
+              let fill = sq === "." ? "#555555" : "#ffffff";
               let letter = sq;
               let squareFill =
                 index == this.state.activeSquare ? "#ffdd00" : fill;

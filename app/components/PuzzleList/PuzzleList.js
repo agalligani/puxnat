@@ -69,6 +69,30 @@ export default class PuzzleList extends React.Component {
     }
   };
 
+  // puzzleMetadata will need to return more interesting visuals
+
+  puzzleMetadata = grid => {
+    let squares = grid.length;
+    let blankSquares = grid.filter(sq => sq == "").length;
+    let blackSquares = grid.filter(sq => sq == ".").length;
+    let answerSquares = squares - blackSquares;
+    let percentageFilled = Math.floor(
+      ((answerSquares - blankSquares) / answerSquares) * 100
+    );
+
+    return (
+      // cheesy placeholder
+      <Text>
+        Answer Squares: {answerSquares}
+        {"\n"}
+        Black Squares: {blackSquares}
+        {"\n"}
+        Filled: {percentageFilled}
+        {"%"}
+      </Text>
+    );
+  };
+
   render() {
     return (
       <ScrollView contentContainerStyle={styles.listContainer}>
@@ -77,17 +101,20 @@ export default class PuzzleList extends React.Component {
             return (
               <TouchableOpacity
                 key={puzzle.id}
-                key={puzzle.id}
                 onPress={this._handleEditPuzzlePress.bind(this, puzzle)}
                 style={styles.touchable}
               >
-                <GridThumbnail puzzle={puzzle.puzzle} />
+                <View style={styles.puzzleView}>
+                  <GridThumbnail puzzle={puzzle.puzzle} />
+                </View>
                 <View style={styles.textContainer}>
-                  <Text style={styles.largeText}>
-                    {puzzle.puzzle.size.cols}x{puzzle.puzzle.size.rows}
-                  </Text>
+                  <View>
+                    <Text style={styles.largeText}>
+                      {puzzle.puzzle.size.cols}x{puzzle.puzzle.size.rows}
+                    </Text>
+                  </View>
                   <Text style={styles.normalText}>
-                    Important puzzle info....
+                    {this.puzzleMetadata(puzzle.puzzle.grid)}
                   </Text>
                 </View>
               </TouchableOpacity>

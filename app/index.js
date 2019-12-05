@@ -10,6 +10,7 @@ EStyleSheet.build({
   $slate: "#8d9ca3",
   $grey: "#818997",
   $lightBlue: "#90b6ca",
+  $lightMustard: "#ffdb58",
 
   $h1white: { color: "$white", fontSize: 100 }
 });

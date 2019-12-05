@@ -378,7 +378,6 @@ class Grid extends Component {
             autoCorrect={false}
             autoComplete={false}
             clearTextOnFocus={true}
-            // autoCompleteType={cc-number}
             style={styles.textInput}
             className="textInput"
             ref={ref => (this.ref = ref)}
