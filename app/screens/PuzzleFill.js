@@ -46,7 +46,15 @@ class PuzzleFill extends React.Component {
           {/* CreatePuzzle should probably be renamed FillPuzzleGrid */}
           <Text>
             {/* {Object.keys(props.navigation.state.params.puzzles).join(",")} */}
-            {Object.keys(props.navigation.state.params).join(",")}
+            {Object.keys(props.navigation.state.params.currentGrid.puzzle).join(
+              ","
+            )}
+            {props.navigation.state.params.currentGrid.puzzle.answers.across.join(
+              ","
+            )}
+            {props.navigation.state.params.currentGrid.puzzle.answers.down.join(
+              ","
+            )}
           </Text>
         </Content>
       );

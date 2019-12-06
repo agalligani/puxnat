@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import Grid from "../components/Grid/Grid";
 import prompt from "react-native-prompt-android";
+import { isEmpty } from "lodash";
 
 export default class CreatePuzzle extends React.Component {
   state = {
@@ -30,20 +31,46 @@ export default class CreatePuzzle extends React.Component {
       "allPuzzles",
       JSON.stringify(this.state.allPuzzles)
     );
-    console.log(puzzle.answers);
   };
 
-  buildAcrossAnswers = p => {
-    acrossAnswers = p.grid
+  buildAcrossAnswers = _ => {
+    let currentPuzzle = this.state.currentPuzzle;
+    acrossAnswers = currentPuzzle.grid
       .map(sq => (sq = sq == "" ? " " : sq))
       .join()
       .replace(/,/g, "")
-      .split(".");
-    console.log("grid", acrossAnswers);
+      .split(".")
+      .filter(sq => !isEmpty(sq));
+
+    currentPuzzle.answers.across = acrossAnswers;
+    this.setState({ currentPuzzle: currentPuzzle });
+  };
+
+  //pass the whole puzzle so we can get grid and grid size
+  buildDownAnswers = _ => {
+    let currentPuzzle = this.state.currentPuzzle;
+    let { cols, rows } = currentPuzzle.size;
+    let colString = "";
+    let downAnswers = [];
+
+    for (x = 0; x < cols; x++) {
+      for (i = 0; i < rows; i++) {
+        colString = isEmpty(currentPuzzle.grid[x + i * rows])
+          ? colString + " "
+          : colString + currentPuzzle.grid[x + i * rows];
+      }
+      downAnswers = downAnswers.concat(
+        colString.split(".").filter(sq => !isEmpty(sq))
+      );
+      colString = "";
+    }
+    currentPuzzle.answers.down = downAnswers;
+    this.setState({ currentPuzzle: currentPuzzle });
   };
 
   _handleSavePress = _ => {
-    const acrossAnswers = this.buildAcrossAnswers(this.state.currentPuzzle);
+    this.buildAcrossAnswers();
+    this.buildDownAnswers();
     if (this.state.currentPuzzle.id === null) {
       prompt(
         "Enter Puzzle Name",
