@@ -17,11 +17,12 @@ export default EStyleSheet.create({
     // borderWidth: 3,
   },
   puzzleView: {
-    flex: 40
+    flex: 4,
+    alignItems: "center"
   },
   puzzle: {},
   textContainer: {
-    flex: 60,
+    flex: 6,
     color: "$white",
     backgroundColor: "$lightMustard",
     padding: 10

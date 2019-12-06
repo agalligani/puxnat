@@ -20,6 +20,7 @@ class GridThumbnail extends Component {
   componentWillMount = _ => {
     if (this.props.puzzle.grid) {
       this.setState({ puzzle: this.props.puzzle });
+      this.setState({ width: this.props.width });
     }
   };
 
@@ -27,7 +28,7 @@ class GridThumbnail extends Component {
     if (this.state.puzzle.grid) {
       let { grid, size, gridnums } = this.state.puzzle;
       let { cols, rows } = size;
-      width = 180;
+      width = this.state.width;
       return (
         <Svg.Svg height={width} width={width}>
           <Svg.G fill="white" stroke-width="5">

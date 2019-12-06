@@ -5,13 +5,11 @@ import {
   ScrollView,
   Image,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from "react-native";
 
-import { H1, H2, H3 } from "native-base";
-
 import styles from "./styles";
-
 import { GridThumbnail } from "../GridThumbnail";
 
 export default class PuzzleList extends React.Component {
@@ -94,6 +92,8 @@ export default class PuzzleList extends React.Component {
   };
 
   render() {
+    let { height, width } = Dimensions.get("window");
+    let gridWidth = width * 0.3;
     return (
       <ScrollView contentContainerStyle={styles.listContainer}>
         {this.state.allPuzzles.map(puzzle => {
@@ -105,7 +105,7 @@ export default class PuzzleList extends React.Component {
                 style={styles.touchable}
               >
                 <View style={styles.puzzleView}>
-                  <GridThumbnail puzzle={puzzle.puzzle} />
+                  <GridThumbnail puzzle={puzzle.puzzle} width={gridWidth} />
                 </View>
                 <View style={styles.textContainer}>
                   <View>
