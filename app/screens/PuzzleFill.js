@@ -2,21 +2,13 @@ import React from "react";
 import {
   Button,
   Container,
-  Header,
-  Body,
-  Right,
-  Left,
   Footer,
   FooterTab,
-  Icon,
   Text,
-  Title,
   Content
 } from "native-base";
-
-import PuzzleList from "../components/PuzzleList";
-import { SafeAreaView, StatusBar } from "react-native";
-import emptyGrid from "../utils/emptyGrid";
+import { Answers } from "../components/Answers";
+import { SafeAreaView, StatusBar, View } from "react-native";
 import CreatePuzzle from "./CreatePuzzle";
 
 class PuzzleFill extends React.Component {
@@ -36,7 +28,6 @@ class PuzzleFill extends React.Component {
           {/* CreatePuzzle should probably be renamed FillPuzzleGrid */}
           {/* Also passing props doesn't make sense... should only pass current puzzle */}
           {/* See {Object.keys(props.navigation.state.params.puzzles).join(",")} */}
-
           <CreatePuzzle {...props} />
         </Content>
       );
@@ -44,18 +35,27 @@ class PuzzleFill extends React.Component {
       return (
         <Content>
           {/* CreatePuzzle should probably be renamed FillPuzzleGrid */}
-          <Text>
-            {/* {Object.keys(props.navigation.state.params.puzzles).join(",")} */}
-            {Object.keys(props.navigation.state.params.currentGrid.puzzle).join(
-              ","
-            )}
-            {props.navigation.state.params.currentGrid.puzzle.answers.across.join(
+          <View>
+            <Text>Across</Text>
+            <Answers
+              answers={
+                props.navigation.state.params.currentGrid.puzzle.answers.across
+              }
+            />
+
+            <Text>Down</Text>
+            <Answers
+              answers={
+                props.navigation.state.params.currentGrid.puzzle.answers.down
+              }
+            />
+            {/* {props.navigation.state.params.currentGrid.puzzle.answers.across.join(
               ","
             )}
             {props.navigation.state.params.currentGrid.puzzle.answers.down.join(
               ","
-            )}
-          </Text>
+            )} */}
+          </View>
         </Content>
       );
     }

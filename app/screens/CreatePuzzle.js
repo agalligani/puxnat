@@ -35,14 +35,21 @@ export default class CreatePuzzle extends React.Component {
 
   buildAcrossAnswers = _ => {
     let currentPuzzle = this.state.currentPuzzle;
-    acrossAnswers = currentPuzzle.grid
+    let { size, grid } = this.state.currentPuzzle;
+    currentPuzzle.answers.across = [];
+
+    acrossGrid = grid
       .map(sq => (sq = sq == "" ? " " : sq))
       .join()
-      .replace(/,/g, "")
-      .split(".")
-      .filter(sq => !isEmpty(sq));
+      .replace(/,/g, "");
 
-    currentPuzzle.answers.across = acrossAnswers;
+    for (i = 0; i < size.rows; i++) {
+      pos = i * size.cols;
+      n = acrossGrid.substr(pos, size.cols);
+      currentPuzzle.answers.across = currentPuzzle.answers.across.concat(
+        n.split(".").filter(sq => !isEmpty(sq))
+      );
+    }
     this.setState({ currentPuzzle: currentPuzzle });
   };
 
