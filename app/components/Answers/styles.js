@@ -7,16 +7,18 @@ export default EStyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     width: "100%",
-    backgroundColor: "$white"
+    backgroundColor: "$white",
+    marginLeft: 12
   },
   answerLetter: {
-    width: 14,
-    height: 14,
+    width: 20,
+    height: 20,
     borderWidth: 1,
     marginRight: -1,
     borderColor: "#999999",
     textAlign: "center",
-    fontSize: 10,
+    lineHeight: 19,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#333333"
   }
