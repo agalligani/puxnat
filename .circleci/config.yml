@@ -43,5 +43,6 @@ jobs:
           name: Expo Deployment
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                yarn semantic-release
+                # yarn semantic-release
+                expo publish
             fi
