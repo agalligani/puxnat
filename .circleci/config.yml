@@ -31,11 +31,6 @@ jobs:
           name: Install Node Dependencies
           command: yarn install
 
-      - run:
-          name: Login into Expo
-          # command: npx expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
-          command: npx expo login -u 'agalligani' -p 'Cowflop#1'
-
       - save_cache:
           paths:
             - node_modules
@@ -47,8 +42,9 @@ jobs:
       - deploy:
           name: Expo Deployment
           command: |
+            TERM=dumb
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 # yarn semantic-release
-                npx expo login -u "${EXPO_USERNAME}" -p "${EXPO_PASSWORD}"
+                npx expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
                 npx expo publish
             fi
