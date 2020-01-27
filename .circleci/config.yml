@@ -49,6 +49,6 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 # yarn semantic-release
-                npx expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
+                npx expo login -u "${EXPO_USERNAME}" -p "${EXPO_PASSWORD}"
                 npx expo publish
             fi
