@@ -8,12 +8,9 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:12.13.0
-
-      # - image: circleci/expo:36.0.2
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
 
     working_directory: ~/repo
 
@@ -43,7 +40,9 @@ jobs:
           name: Expo Deployment
           command: |
             TERM=dumb
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            ROOT_BRANCH="master"
+            if [ "${CIRCLE_BRANCH}" == $ROOT_BRANCH ]; then
+                echo " ▶️  Deploying on ${CIRCLE_BRANCH}. Continuing the job..."
                 # yarn semantic-release
                 npx expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
                 npx expo publish
