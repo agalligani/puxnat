@@ -1,8 +1,13 @@
 import React from "react";
-import { AsyncStorage, Alert } from "react-native";
-import prompt from "react-native-prompt-android";
+import {
+  AsyncStorage,
+  // Alert,
+  SafeAreaView,
+  StatusBar,
+  Button
+} from "react-native";
 import Grid from "../components/Grid/Grid";
-import { SafeAreaView, StatusBar, Button } from "react-native";
+import Prompt from "rn-prompt";
 
 export default class CreateGrid extends React.Component {
   state = {
@@ -14,7 +19,8 @@ export default class CreateGrid extends React.Component {
     gridsInList: [],
     clickedGrid: {},
     isPuzzle: false,
-    action: "editGrid"
+    action: "editGrid",
+    promptVisible: false
   };
 
   addNewGrid = async name => {
@@ -39,17 +45,18 @@ export default class CreateGrid extends React.Component {
   //Change this function name!
   _handleCreateGridPress = _ => {
     if (this.state.currentGrid.id === null) {
-      prompt(
-        "Enter Grid Name",
-        "",
-        [
-          { text: "Cancel" },
-          { text: "OK", onPress: this.addNewGrid.bind(this) }
-        ],
-        {
-          type: "plain-text"
-        }
-      );
+      this.setState({ promptVisible: true });
+      // prompt(
+      //   "Enter Grid Name",
+      //   "",
+      //   [
+      //     { text: "Cancel" },
+      //     { text: "OK", onPress: this.addNewGrid.bind(this) }
+      //   ],
+      //   {
+      //     type: "plain-text"
+      //   }
+      // );
     } else {
       this.props.navigation.state.params.saveGridById(this.state.currentGrid);
       return;
@@ -112,6 +119,26 @@ export default class CreateGrid extends React.Component {
           onPress={this._openGridList.bind(this)}
         />
         <Button onPress={() => this.props.navigation.goBack()} title="Cancel" />
+        {/* This isn't saving name - do we even need to name grids? */}
+        <Prompt
+          title="Enter a Name for this Grid"
+          placeholder="Start typing"
+          defaultValue=""
+          visible={this.state.promptVisible}
+          onCancel={() =>
+            this.setState({
+              promptVisible: false
+            })
+          }
+          onSubmit={
+            (value =>
+              this.setState({
+                promptVisible: false,
+                message: `You said "${value}"`
+              }),
+            this.addNewGrid.bind(this))
+          }
+        />
       </SafeAreaView>
     );
   }

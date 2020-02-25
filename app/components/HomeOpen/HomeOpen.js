@@ -9,16 +9,43 @@ import {
   Dimensions
 } from "react-native";
 
+import Carousel from "../Carousel";
+
 import styles from "./styles";
 import { GridThumbnail } from "../GridThumbnail";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Button } from "react-native-elements";
+import emptyGrid from "../../utils/emptyGrid";
 
-export default class PuzzleList extends React.Component {
+export default class HomeOpen extends React.Component {
   state = {
     puzzlesEmpty: true,
     allPuzzles: [],
     clickedPuzzle: {},
     savedPuzzles: []
+  };
+
+  _handleCreateGridPress = g => {
+    let newGrid = {};
+    newGrid = emptyGrid(15, 15);
+    this.setState({ currentGrid: newGrid });
+    this.props.navigation.navigate("CreateGrid", {
+      saveGrid: grid => {
+        this.setState({ grids: this.state.grids.concat(grid) });
+      },
+      newGrid: newGrid,
+      gridsInList: this.state.grids,
+      currentGrid: this.state.currentGrid,
+      action: "editGrid"
+    });
+  };
+
+  _createBlankPuzzle = _ => {
+    const emptyPuzzle = { puzzle: emptyGrid };
+    const currentGrid = { currentGrid: emptyPuzzle };
+    this.props.navigation.navigate("CreatePuzzle", {
+      savePuzzleById: async currentGrid => {}
+    });
   };
 
   componentWillMount = async () => {
@@ -135,7 +162,11 @@ export default class PuzzleList extends React.Component {
       return (
         <View>
           <Text>No Puzzles have been created.</Text>
-          <Ionicons name="emoticon-neutral" size={32} color="green" />;
+          <Button
+            onPress={this._handleCreateGridPress.bind(this)}
+            icon={<MaterialIcons name="add-box" size={32} color="#225599" />}
+            title="Create Your First Puzzle"
+          />
         </View>
       );
     }

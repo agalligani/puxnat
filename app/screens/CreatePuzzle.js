@@ -7,7 +7,7 @@ import {
   Button
 } from "react-native";
 import Grid from "../components/Grid/Grid";
-import prompt from "react-native-prompt-android";
+// import prompt from "react-native-prompt-android";
 import { isEmpty } from "lodash";
 
 export default class CreatePuzzle extends React.Component {
@@ -20,6 +20,7 @@ export default class CreatePuzzle extends React.Component {
 
   savePuzzleById = async puzzle => {
     // await this._removeP(puzzle);
+    puzzle.name = "null";
     this.setState({
       puzzles: this.state.allPuzzles.concat({
         name: puzzle.name,
@@ -76,28 +77,24 @@ export default class CreatePuzzle extends React.Component {
   };
 
   _handleSavePress = _ => {
+    console.log("here 1");
     this.buildAcrossAnswers();
     this.buildDownAnswers();
+
     if (this.state.currentPuzzle.id === null) {
-      prompt(
-        "Enter Puzzle Name",
-        "",
-        [
-          { text: "Cancel" },
-          { text: "OK", onPress: this.addNewPuzzle.bind(this) }
-        ],
-        {
-          type: "plain-text"
-        }
-      );
+      this.addNewPuzzle.bind(this);
+      console.log("here 2");
+      console.log(this.state.currentPuzzle.id);
     } else {
       this.savePuzzleById(this.state.currentPuzzle);
       return;
     }
   };
 
-  addNewPuzzle = async name => {
+  addNewPuzzle = async _ => {
+    console.log("what the living fuck?");
     let currentPuzzle = this.state.currentPuzzle;
+    console.log("--->", currentPuzzle);
     currentPuzzle.id = Math.floor(Math.random() * 100000);
     this.setState({ currentPuzzle: currentPuzzle });
     const newPuzzleList = this.state.allPuzzles.concat({
@@ -116,7 +113,13 @@ export default class CreatePuzzle extends React.Component {
     // this.props.navigation.state.params.savePuzzle(newPuzzlesList.slice(-1)[0]);
   };
 
+  componentDidMount = async _ => {
+    console.log("component did mount");
+    console.log("+++++>", this.state.currentPuzzle.grid);
+  };
+
   componentWillMount = async _ => {
+    console.log("component will mount?");
     this.setState({
       currentPuzzle: this.props.navigation.state.params.currentGrid.puzzle,
       action: this.props.navigation.state.params.action
@@ -131,6 +134,9 @@ export default class CreatePuzzle extends React.Component {
             allPuzzles: JSON.parse(savedPuzzles)
           });
         } else {
+          this.setState({
+            allPuzzles: []
+          });
           console.log("no data");
         }
       } catch (error) {
@@ -138,8 +144,6 @@ export default class CreatePuzzle extends React.Component {
       }
     }
   };
-
-  componentDidMount = _ => {};
 
   _openPuzzleList = _ => {
     this.props.navigation.navigate("PuzzlesEdit", {

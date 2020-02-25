@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, StatusBar, Button } from "react-native";
 import { Container } from "../components/Container";
+import { HomeOpen } from "../components/HomeOpen";
 import { Logo } from "../components/Logo";
 
 class Home extends Component {
@@ -12,14 +13,22 @@ class Home extends Component {
   render() {
     return (
       <Container>
-        <StatusBar translucent={false} barStyle="light-content" />
-        <View>
-          <Logo />
-          <Button title={"Build Puzzles"} onPress={this.handleBuildPress} />
-        </View>
+        <HomeOpen></HomeOpen>
       </Container>
     );
   }
+
+  // render() {
+  //   return (
+  //     <Container>
+  //       <StatusBar translucent={false} barStyle="light-content" />
+  //       <View>
+  //         <Logo />
+  //         <Button title={"Build Puzzles"} onPress={this.handleBuildPress} />
+  //       </View>
+  //     </Container>
+  //   );
+  // }
 }
 
 export default Home;

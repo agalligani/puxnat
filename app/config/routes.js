@@ -7,13 +7,15 @@ import CreateGrid from "../screens/CreateGrid";
 import GridList from "../screens/GridList";
 import PuzzlesEdit from "../screens/PuzzlesEdit";
 import PuzzleFill from "../screens/PuzzleFill";
-import PuzzleList from "../components/PuzzleList";
+import { HomeOpen } from "../components/HomeOpen";
+import { PuzzleList } from "../components/PuzzleList";
+import Carousel from "../screens/Carousel";
 import { BuildMenu, ChooseAGrid } from "../modals";
 
 const MainStack = createStackNavigator(
   {
     Home: {
-      screen: Home,
+      screen: HomeOpen,
       navigationOptions: {
         header: () => null
       }
