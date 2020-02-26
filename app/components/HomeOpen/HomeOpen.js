@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import {
   View,
   AsyncStorage,
-  ScrollView,
   Image,
   Text,
   TouchableOpacity,
@@ -76,15 +75,15 @@ export default class HomeOpen extends Component {
           }
           renderItem={({ itemIndex, currentIndex, item, animatedValue }) => (
             <SafeAreaView>
-              <View style={{ width: componentWidth }}>
-                <Card title={item.puzzle.size.cols}>
+              <View style={{ width: componentWidth, alignItems: "center" }}>
+                <Card title="Puzzle">
                   <Badge value={item.id} />
                   <Text>
                     {item.puzzle.size.cols}x{item.puzzle.size.rows}
                   </Text>
                   <GridThumbnail
                     puzzle={item.puzzle}
-                    width={componentWidth / 2}
+                    width={componentWidth / 1.5}
                   />
                 </Card>
               </View>

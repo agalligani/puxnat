@@ -21,7 +21,7 @@ export default class PuzzleList extends React.Component {
     savedPuzzles: []
   };
 
-  componentWillMount = async () => {
+  componentDidMount = async () => {
     try {
       const savedPuzzles = await AsyncStorage.getItem("allPuzzles");
       if (savedPuzzles !== null) {

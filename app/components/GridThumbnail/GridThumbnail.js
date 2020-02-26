@@ -1,12 +1,9 @@
 import React, { Component } from "react";
+import { Dimensions } from "react-native";
 import _ from "lodash";
 import { Body, Spinner } from "native-base";
 import styles from "./styles";
 import * as Svg from "react-native-svg";
-
-// This Component was created from Grid component
-// It was thought a simplified version would be
-// Better to create simple thumbnails
 
 class GridThumbnail extends Component {
   state = {
@@ -17,7 +14,7 @@ class GridThumbnail extends Component {
     whiteSquares: []
   };
 
-  componentWillMount = _ => {
+  componentDidMount = _ => {
     if (this.props.puzzle.grid) {
       this.setState({ puzzle: this.props.puzzle });
       this.setState({ width: this.props.width });
@@ -26,12 +23,12 @@ class GridThumbnail extends Component {
 
   render() {
     if (this.state.puzzle.grid) {
-      let { grid, size, gridnums } = this.state.puzzle;
+      let { grid, size } = this.state.puzzle;
       let { cols, rows } = size;
       width = this.state.width;
       return (
         <Svg.Svg height={width} width={width}>
-          <Svg.G fill="white" stroke-width="5">
+          <Svg.G fill="white" stroke-width="1">
             {grid.map((sq, index) => {
               let squareWidth = width / cols;
               let height = squareWidth;
@@ -40,7 +37,7 @@ class GridThumbnail extends Component {
               let y = Math.floor(index / cols);
               let posy = y * height;
               let fill = sq === "." ? "#555555" : "#ffffff";
-              let letter = sq;
+              let letter = sq === "." ? "" : sq;
               let squareFill =
                 index == this.state.activeSquare ? "#ffdd00" : fill;
               let textElement = (
@@ -48,7 +45,7 @@ class GridThumbnail extends Component {
                   x={squareWidth * 0.25}
                   y={squareWidth * 0.8}
                   font-family={"Verdana"}
-                  fontSize="8"
+                  fontSize="17"
                   stroke="#0d7fb5"
                   fill="#0d7fb5"
                   strokeWidth=".5"
@@ -66,7 +63,7 @@ class GridThumbnail extends Component {
                     width={squareWidth}
                     height={squareWidth}
                     strokeWidth={1}
-                    stroke="#444444"
+                    stroke="#8C8C99"
                     fill={squareFill}
                   />
                   {letter}
