@@ -1,6 +1,14 @@
 import EStyleSheet from "react-native-extended-stylesheet";
 
 export default EStyleSheet.create({
+  puzzleButton: {
+    width: 45,
+    height: 45,
+    display: "flex",
+    flexDirection: "row",
+    color: "#ffffff",
+    backgroundColor: "#ffffff"
+  },
   listContainer: {
     alignItems: "center",
     justifyContent: "flex-start",

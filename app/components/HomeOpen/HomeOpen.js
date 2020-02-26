@@ -5,19 +5,20 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  Divider,
   Dimensions,
   SafeAreaView
 } from "react-native";
+import { Card, Badge, Button, ButtonGroup } from "react-native-elements"; // 0.18.5
+
+import styles from "./styles";
 
 // or any pure javascript modules available in npm
 import SideSwipe from "react-native-sideswipe"; // 0.0.6
-import { Card, Badge } from "react-native-elements"; // 0.18.5
-import "@expo/vector-icons"; // 6.2.2
-
-import styles from "./styles";
+import { FontAwesome } from "@expo/vector-icons"; // 6.2.2
 import { GridThumbnail } from "../GridThumbnail";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Button } from "react-native-elements";
+// import { Button } from "react-native-elements";
 import emptyGrid from "../../utils/emptyGrid";
 import { puzzleMeta } from "../PuzzleMeta";
 import { Container } from "../Container";
@@ -25,7 +26,6 @@ import { Container } from "../Container";
 const { width } = Dimensions.get("window");
 const componentWidth = width;
 const contentOffset = (width - componentWidth) / 2;
-const data = [1, 2, 3, 4, 5];
 
 export default class HomeOpen extends Component {
   state = {
@@ -62,34 +62,60 @@ export default class HomeOpen extends Component {
   render() {
     let { height, width } = Dimensions.get("window");
     let gridWidth = width * 0.3;
+    let happyPink = "#dd669C";
+    let thumbWidth = componentWidth / 1.5;
+    const puzzleButtons = [
+      <FontAwesome name="pencil" size={30} color={happyPink} />,
+      <FontAwesome name="upload" size={30} color={happyPink} />,
+      <FontAwesome name="share-square-o" size={30} color={happyPink} />,
+      <FontAwesome name="gear" size={30} color={happyPink} />,
+      <FontAwesome name="trash-o" size={30} color={happyPink} />
+    ];
+
     if (!this.state.puzzlesEmpty) {
       return (
-        <SideSwipe
-          index={this.state.currentIndex}
-          itemWidth={componentWidth}
-          style={{ width }}
-          data={this.state.allPuzzles}
-          contentOffset={contentOffset}
-          onIndexChange={index =>
-            this.setState(() => ({ currentIndex: index }))
-          }
-          renderItem={({ itemIndex, currentIndex, item, animatedValue }) => (
-            <SafeAreaView>
-              <View style={{ width: componentWidth, alignItems: "center" }}>
+        <Container>
+          <SideSwipe
+            index={this.state.currentIndex}
+            itemWidth={componentWidth}
+            style={{ width }}
+            data={this.state.allPuzzles}
+            contentOffset={contentOffset}
+            onIndexChange={index =>
+              this.setState(() => ({ currentIndex: index }))
+            }
+            renderItem={({ itemIndex, currentIndex, item, animatedValue }) => (
+              <SafeAreaView>
                 <Card title="Puzzle">
-                  <Badge value={item.id} />
-                  <Text>
-                    {item.puzzle.size.cols}x{item.puzzle.size.rows}
-                  </Text>
+                  {/* <Badge value={item.id} /> */}
+                  {/* <Text>
+                      {item.puzzle.size.cols}x{item.puzzle.size.rows}
+                    </Text> */}
                   <GridThumbnail
                     puzzle={item.puzzle}
                     width={componentWidth / 1.5}
                   />
+                  <View
+                    style={{
+                      width: thumbWidth,
+                      justifyContent: "center",
+                      display: "flex"
+                    }}
+                  >
+                    <ButtonGroup
+                      // onPress={this.updateIndex}
+                      // selectedIndex={selectedIndex}
+                      buttons={puzzleButtons}
+                      containerStyle={{ height: 40 }}
+                    />
+                  </View>
                 </Card>
-              </View>
-            </SafeAreaView>
-          )}
-        />
+              </SafeAreaView>
+            )}
+          />
+          {/* <Divider style={{ backgroundColor: "blue" }} /> */}
+          <Card title="Howdy Friend!"></Card>
+        </Container>
       );
       //   return (
       //     <ScrollView contentContainerStyle={styles.listContainer}>
