@@ -7,7 +7,6 @@ import {
   Button
 } from "react-native";
 import Grid from "../components/Grid/Grid";
-import Prompt from "rn-prompt";
 
 export default class CreateGrid extends React.Component {
   state = {
@@ -45,7 +44,9 @@ export default class CreateGrid extends React.Component {
   //Change this function name!
   _handleCreateGridPress = _ => {
     if (this.state.currentGrid.id === null) {
-      this.setState({ promptVisible: true });
+      this.addNewGrid();
+
+      // this.setState({ promptVisible: true });
       // prompt(
       //   "Enter Grid Name",
       //   "",
@@ -120,7 +121,7 @@ export default class CreateGrid extends React.Component {
         />
         <Button onPress={() => this.props.navigation.goBack()} title="Cancel" />
         {/* This isn't saving name - do we even need to name grids? */}
-        <Prompt
+        {/* <Prompt
           title="Enter a Name for this Grid"
           placeholder="Start typing"
           defaultValue=""
@@ -138,7 +139,7 @@ export default class CreateGrid extends React.Component {
               }),
             this.addNewGrid.bind(this))
           }
-        />
+        /> */}
       </SafeAreaView>
     );
   }
