@@ -15,6 +15,11 @@ import { Card, Badge } from "react-native-elements"; // 0.18.5
 
 import "@expo/vector-icons"; // 6.2.2
 
+const { width } = Dimensions.get("window");
+const componentWidth = width;
+const contentOffset = (width - componentWidth) / 2;
+const data = [1, 2, 3, 4, 5];
+
 export default class Carousel extends Component {
   state = {
     currentIndex: 0

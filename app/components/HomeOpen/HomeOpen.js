@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Component } from "react";
 import {
   View,
   AsyncStorage,
@@ -6,24 +6,147 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  SafeAreaView
 } from "react-native";
 
-import Carousel from "../Carousel";
+// or any pure javascript modules available in npm
+import SideSwipe from "react-native-sideswipe"; // 0.0.6
+import { Card, Badge } from "react-native-elements"; // 0.18.5
+import "@expo/vector-icons"; // 6.2.2
 
 import styles from "./styles";
 import { GridThumbnail } from "../GridThumbnail";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Button } from "react-native-elements";
 import emptyGrid from "../../utils/emptyGrid";
+import { puzzleMeta } from "../PuzzleMeta";
+import { Container } from "../Container";
 
-export default class HomeOpen extends React.Component {
+const { width } = Dimensions.get("window");
+const componentWidth = width;
+const contentOffset = (width - componentWidth) / 2;
+const data = [1, 2, 3, 4, 5];
+
+export default class HomeOpen extends Component {
   state = {
     puzzlesEmpty: true,
     allPuzzles: [],
     clickedPuzzle: {},
-    savedPuzzles: []
+    savedPuzzles: [],
+    currentIndex: 0,
+    puzzleKeys: []
   };
+
+  componentDidMount = async () => {
+    try {
+      const savedPuzzles = await AsyncStorage.getItem("allPuzzles");
+      if (savedPuzzles !== null) {
+        const actualPuzzles = JSON.parse(savedPuzzles).map(puzzle => {
+          if (puzzle.puzzle) return puzzle;
+        });
+        this.setState({
+          puzzlesEmpty: false,
+          allPuzzles: actualPuzzles
+        });
+        console.log(this.state.allPuzzles);
+      } else {
+        console.log("no data");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // puzzleMetadata will need to return more interesting visuals
+
+  render() {
+    let { height, width } = Dimensions.get("window");
+    let gridWidth = width * 0.3;
+    if (!this.state.puzzlesEmpty) {
+      return (
+        <SideSwipe
+          index={this.state.currentIndex}
+          itemWidth={componentWidth}
+          style={{ width }}
+          data={this.state.allPuzzles}
+          contentOffset={contentOffset}
+          onIndexChange={index =>
+            this.setState(() => ({ currentIndex: index }))
+          }
+          renderItem={({ itemIndex, currentIndex, item, animatedValue }) => (
+            <SafeAreaView>
+              <View style={{ width: componentWidth }}>
+                <Card title={item.puzzle.size.cols}>
+                  <Badge value={item.id} />
+                  <Text>
+                    {item.puzzle.size.cols}x{item.puzzle.size.rows}
+                  </Text>
+                  <GridThumbnail
+                    puzzle={item.puzzle}
+                    width={componentWidth / 2}
+                  />
+                </Card>
+              </View>
+            </SafeAreaView>
+          )}
+        />
+      );
+      //   return (
+      //     <ScrollView contentContainerStyle={styles.listContainer}>
+      //       {this.state.allPuzzles.map(puzzle => {
+      //         if (puzzle !== null) {
+      //           return (
+      //             <TouchableOpacity
+      //               key={puzzle.id}
+      //               onPress={this._handleEditPuzzlePress.bind(this, puzzle)}
+      //               style={styles.touchable}
+      //             >
+      //               <View style={styles.puzzleView}>
+      //                 <GridThumbnail puzzle={puzzle.puzzle} width={gridWidth} />
+      //               </View>
+      //               <View style={styles.textContainer}>
+      //                 <View>
+      //                   <Text style={styles.largeText}>
+      //                     {puzzle.puzzle.size.cols}x{puzzle.puzzle.size.rows}
+      //                   </Text>
+      //                 </View>
+      //                 <Text style={styles.normalText}>
+      //                   {this.puzzleMetadata(puzzle.puzzle.grid)}
+      //                 </Text>
+      //               </View>
+      //             </TouchableOpacity>
+      //           );
+      //         }
+      //       })}
+      //     </ScrollView>
+      //   );
+      // } else {
+      //   return (
+      //     <View>
+      //       <Text>No Puzzles have been created.</Text>
+      //       <Button
+      //         onPress={this._handleCreateGridPress.bind(this)}
+      //         icon={<MaterialIcons name="add-box" size={32} color="#225599" />}
+      //         title="Create Your First Puzzle"
+      //       />
+      //     </View>
+      //   );
+    } else {
+      return (
+        <Container>
+          <View>
+            <Text>No Puzzles have been created.</Text>
+            <Button
+              onPress={this._handleCreateGridPress.bind(this)}
+              icon={<MaterialIcons name="add-box" size={32} color="#225599" />}
+              title="Create Your First Puzzle"
+            />
+          </View>
+        </Container>
+      );
+    }
+  }
 
   _handleCreateGridPress = g => {
     let newGrid = {};
@@ -46,22 +169,6 @@ export default class HomeOpen extends React.Component {
     this.props.navigation.navigate("CreatePuzzle", {
       savePuzzleById: async currentGrid => {}
     });
-  };
-
-  componentWillMount = async () => {
-    try {
-      const savedPuzzles = await AsyncStorage.getItem("allPuzzles");
-      if (savedPuzzles !== null) {
-        this.setState({
-          puzzlesEmpty: false,
-          allPuzzles: JSON.parse(savedPuzzles)
-        });
-      } else {
-        console.log("no data");
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
   };
 
   _handleEditPuzzlePress = p => {
@@ -100,75 +207,4 @@ export default class HomeOpen extends React.Component {
       console.log(error.message);
     }
   };
-
-  // puzzleMetadata will need to return more interesting visuals
-
-  puzzleMetadata = grid => {
-    let squares = grid.length;
-    let blankSquares = grid.filter(sq => sq == "").length;
-    let blackSquares = grid.filter(sq => sq == ".").length;
-    let answerSquares = squares - blackSquares;
-    let percentageFilled = Math.floor(
-      ((answerSquares - blankSquares) / answerSquares) * 100
-    );
-
-    return (
-      // cheesy placeholder
-      <Text>
-        Answer Squares: {answerSquares}
-        {"\n"}
-        Black Squares: {blackSquares}
-        {"\n"}
-        Filled: {percentageFilled}
-        {"%"}
-      </Text>
-    );
-  };
-
-  render() {
-    let { height, width } = Dimensions.get("window");
-    let gridWidth = width * 0.3;
-    if (!this.state.puzzlesEmpty) {
-      return (
-        <ScrollView contentContainerStyle={styles.listContainer}>
-          {this.state.allPuzzles.map(puzzle => {
-            if (puzzle !== null) {
-              return (
-                <TouchableOpacity
-                  key={puzzle.id}
-                  onPress={this._handleEditPuzzlePress.bind(this, puzzle)}
-                  style={styles.touchable}
-                >
-                  <View style={styles.puzzleView}>
-                    <GridThumbnail puzzle={puzzle.puzzle} width={gridWidth} />
-                  </View>
-                  <View style={styles.textContainer}>
-                    <View>
-                      <Text style={styles.largeText}>
-                        {puzzle.puzzle.size.cols}x{puzzle.puzzle.size.rows}
-                      </Text>
-                    </View>
-                    <Text style={styles.normalText}>
-                      {this.puzzleMetadata(puzzle.puzzle.grid)}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            }
-          })}
-        </ScrollView>
-      );
-    } else {
-      return (
-        <View>
-          <Text>No Puzzles have been created.</Text>
-          <Button
-            onPress={this._handleCreateGridPress.bind(this)}
-            icon={<MaterialIcons name="add-box" size={32} color="#225599" />}
-            title="Create Your First Puzzle"
-          />
-        </View>
-      );
-    }
-  }
 }
