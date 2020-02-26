@@ -7,7 +7,6 @@ import {
   Button
 } from "react-native";
 import Grid from "../components/Grid/Grid";
-// import prompt from "react-native-prompt-android";
 import { isEmpty } from "lodash";
 
 export default class CreatePuzzle extends React.Component {
@@ -19,7 +18,6 @@ export default class CreatePuzzle extends React.Component {
   };
 
   savePuzzleById = async puzzle => {
-    // await this._removeP(puzzle);
     puzzle.name = "null";
     this.setState({
       puzzles: this.state.allPuzzles.concat({
@@ -56,6 +54,7 @@ export default class CreatePuzzle extends React.Component {
 
   //pass the whole puzzle so we can get grid and grid size
   buildDownAnswers = _ => {
+    console.log("build down answers");
     let currentPuzzle = this.state.currentPuzzle;
     let { cols, rows } = currentPuzzle.size;
     let colString = "";
@@ -77,14 +76,11 @@ export default class CreatePuzzle extends React.Component {
   };
 
   _handleSavePress = _ => {
-    console.log("here 1");
     this.buildAcrossAnswers();
     this.buildDownAnswers();
 
     if (this.state.currentPuzzle.id === null) {
-      this.addNewPuzzle.bind(this);
-      console.log("here 2");
-      console.log(this.state.currentPuzzle.id);
+      addNewPuzzle(this);
     } else {
       this.savePuzzleById(this.state.currentPuzzle);
       return;
@@ -113,9 +109,18 @@ export default class CreatePuzzle extends React.Component {
     // this.props.navigation.state.params.savePuzzle(newPuzzlesList.slice(-1)[0]);
   };
 
+  deleteAllPuzzles = async _ => {
+    console.log("Deleting everything!");
+    try {
+      await AsyncStorage.setItem("allPuzzles", JSON.stringify([]));
+    } catch (error) {
+      Alert.alert("Error", error.message, [{ text: "OK" }]);
+    }
+    this.setState({ allPuzzles: [] });
+  };
+
   componentDidMount = async _ => {
     console.log("component did mount");
-    console.log("+++++>", this.state.currentPuzzle.grid);
   };
 
   componentWillMount = async _ => {
@@ -137,7 +142,6 @@ export default class CreatePuzzle extends React.Component {
           this.setState({
             allPuzzles: []
           });
-          console.log("no data");
         }
       } catch (error) {
         console.log(error.message);
