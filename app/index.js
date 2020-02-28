@@ -3,6 +3,7 @@ import EStyleSheet from "react-native-extended-stylesheet";
 import Navigator from "./config/routes";
 
 EStyleSheet.build({
+  $happyPink: "#dd669C",
   $primaryCharcoal: "#90b6ca",
   $white: "#FFFFFF",
   $blue: "#0d7fb5",

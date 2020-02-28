@@ -5,23 +5,23 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  Divider,
   Dimensions,
   SafeAreaView
 } from "react-native";
-import { Card, Badge, Button, ButtonGroup } from "react-native-elements"; // 0.18.5
-
+import { Card, Badge, ButtonGroup, Divider } from "react-native-elements"; // 0.18.5
 import styles from "./styles";
+import * as Font from "expo-font";
+import { FontAwesome } from "@expo/vector-icons";
 
-// or any pure javascript modules available in npm
-import SideSwipe from "react-native-sideswipe"; // 0.0.6
-import { FontAwesome } from "@expo/vector-icons"; // 6.2.2
+import SideSwipe from "react-native-sideswipe";
+import { CarouselCard } from "../CarouselCard";
 import { GridThumbnail } from "../GridThumbnail";
 import { MaterialIcons } from "@expo/vector-icons";
-// import { Button } from "react-native-elements";
+import { Button } from "react-native-elements";
 import emptyGrid from "../../utils/emptyGrid";
 import { puzzleMeta } from "../PuzzleMeta";
 import { Container } from "../Container";
+import { CreatePuzzleMenu } from "../CreatePuzzleMenu";
 
 const { width } = Dimensions.get("window");
 const componentWidth = width;
@@ -34,10 +34,17 @@ export default class HomeOpen extends Component {
     clickedPuzzle: {},
     savedPuzzles: [],
     currentIndex: 0,
-    puzzleKeys: []
+    puzzleKeys: [],
+    fontLoaded: true
   };
 
   componentDidMount = async () => {
+    await Font.loadAsync({
+      "muli-bold": require("../../../assets/fonts/Muli-Bold.ttf")
+    });
+
+    this.setState({ fontLoaded: true });
+
     try {
       const savedPuzzles = await AsyncStorage.getItem("allPuzzles");
       if (savedPuzzles !== null) {
@@ -48,7 +55,6 @@ export default class HomeOpen extends Component {
           puzzlesEmpty: false,
           allPuzzles: actualPuzzles
         });
-        console.log(this.state.allPuzzles);
       } else {
         console.log("no data");
       }
@@ -57,24 +63,36 @@ export default class HomeOpen extends Component {
     }
   };
 
-  // puzzleMetadata will need to return more interesting visuals
-
   render() {
     let { height, width } = Dimensions.get("window");
-    let gridWidth = width * 0.3;
     let happyPink = "#dd669C";
-    let thumbWidth = componentWidth / 1.5;
-    const puzzleButtons = [
-      <FontAwesome name="pencil" size={30} color={happyPink} />,
-      <FontAwesome name="upload" size={30} color={happyPink} />,
+    let puzzleButtons = [
+      <FontAwesome
+        name="pencil"
+        size={30}
+        color={happyPink}
+        onPress={() => console.log(this.state.currentIndex)}
+      />,
       <FontAwesome name="share-square-o" size={30} color={happyPink} />,
+      <FontAwesome name="upload" size={30} color={happyPink} />,
       <FontAwesome name="gear" size={30} color={happyPink} />,
-      <FontAwesome name="trash-o" size={30} color={happyPink} />
+      <FontAwesome
+        name="trash-o"
+        size={30}
+        onPress={this._removePuzzle.bind(this)}
+        color={happyPink}
+      />
     ];
+
+    _updateIndex = () => {
+      console.log("");
+    };
 
     if (!this.state.puzzlesEmpty) {
       return (
         <Container>
+          <Text style={styles.muliText}>This should be Muli text.</Text>
+          <Text>De que que?</Text>
           <SideSwipe
             index={this.state.currentIndex}
             itemWidth={componentWidth}
@@ -85,36 +103,14 @@ export default class HomeOpen extends Component {
               this.setState(() => ({ currentIndex: index }))
             }
             renderItem={({ itemIndex, currentIndex, item, animatedValue }) => (
-              <SafeAreaView>
-                <Card title="Puzzle">
-                  {/* <Badge value={item.id} /> */}
-                  {/* <Text>
-                      {item.puzzle.size.cols}x{item.puzzle.size.rows}
-                    </Text> */}
-                  <GridThumbnail
-                    puzzle={item.puzzle}
-                    width={componentWidth / 1.5}
-                  />
-                  <View
-                    style={{
-                      width: thumbWidth,
-                      justifyContent: "center",
-                      display: "flex"
-                    }}
-                  >
-                    <ButtonGroup
-                      // onPress={this.updateIndex}
-                      // selectedIndex={selectedIndex}
-                      buttons={puzzleButtons}
-                      containerStyle={{ height: 40 }}
-                    />
-                  </View>
-                </Card>
-              </SafeAreaView>
+              <CarouselCard
+                componentWidth={componentWidth}
+                gridWidth={componentWidth / 1.5}
+                puzzle={item.puzzle}
+              />
             )}
           />
-          {/* <Divider style={{ backgroundColor: "blue" }} /> */}
-          <Card title="Howdy Friend!"></Card>
+          <CreatePuzzleMenu></CreatePuzzleMenu>
         </Container>
       );
       //   return (
@@ -149,12 +145,6 @@ export default class HomeOpen extends Component {
       // } else {
       //   return (
       //     <View>
-      //       <Text>No Puzzles have been created.</Text>
-      //       <Button
-      //         onPress={this._handleCreateGridPress.bind(this)}
-      //         icon={<MaterialIcons name="add-box" size={32} color="#225599" />}
-      //         title="Create Your First Puzzle"
-      //       />
       //     </View>
       //   );
     } else {
